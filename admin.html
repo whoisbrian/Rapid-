@@ -1,0 +1,959 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Rapidé Admin Panel</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    :root {
+      --bg: #0d0d0d;
+      --surface: #161616;
+      --surface2: #1e1e1e;
+      --border: #2a2a2a;
+      --gold: #f5a623;
+      --gold-dim: #c47f0d;
+      --text: #f0ede8;
+      --muted: #888;
+      --danger: #e74c3c;
+      --success: #2ecc71;
+      --info: #3498db;
+      --warning: #f39c12;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      min-height: 100vh;
+      display: flex;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      width: 240px;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      height: 100vh;
+      z-index: 100;
+    }
+
+    .sidebar-logo {
+      padding: 28px 24px 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .sidebar-logo .brand {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 2rem;
+      color: var(--gold);
+      letter-spacing: 3px;
+      line-height: 1;
+    }
+
+    .sidebar-logo .sub {
+      font-size: 0.65rem;
+      color: var(--muted);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 2px;
+    }
+
+    .sidebar-nav {
+      padding: 20px 12px;
+      flex: 1;
+    }
+
+    .nav-label {
+      font-size: 0.6rem;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--muted);
+      padding: 0 12px;
+      margin-bottom: 8px;
+      margin-top: 16px;
+    }
+
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 12px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+      margin-bottom: 2px;
+    }
+
+    .nav-item:hover { background: var(--surface2); color: var(--text); }
+    .nav-item.active { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .nav-item .icon { font-size: 1rem; width: 20px; text-align: center; }
+
+    .nav-badge {
+      margin-left: auto;
+      background: var(--gold);
+      color: #000;
+      font-size: 0.65rem;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 20px;
+      font-family: 'JetBrains Mono', monospace;
+    }
+
+    .sidebar-footer {
+      padding: 16px;
+      border-top: 1px solid var(--border);
+      font-size: 0.75rem;
+      color: var(--muted);
+      text-align: center;
+    }
+
+    /* MAIN */
+    .main {
+      margin-left: 240px;
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 0 32px;
+      height: 64px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 50;
+    }
+
+    .topbar-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.4rem;
+      letter-spacing: 2px;
+      color: var(--text);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+      font-family: 'DM Sans', sans-serif;
+      letter-spacing: 0.5px;
+    }
+
+    .btn-gold { background: var(--gold); color: #000; }
+    .btn-gold:hover { background: var(--gold-dim); }
+    .btn-ghost { background: transparent; color: var(--muted); border: 1px solid var(--border); }
+    .btn-ghost:hover { color: var(--text); border-color: var(--muted); }
+    .btn-danger { background: rgba(231,76,60,0.15); color: var(--danger); border: 1px solid rgba(231,76,60,0.3); }
+    .btn-danger:hover { background: rgba(231,76,60,0.25); }
+
+    .content { padding: 32px; flex: 1; }
+
+    /* STATS */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 32px;
+    }
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+    }
+
+    .stat-card.gold::before { background: var(--gold); }
+    .stat-card.blue::before { background: var(--info); }
+    .stat-card.green::before { background: var(--success); }
+    .stat-card.red::before { background: var(--danger); }
+
+    .stat-label {
+      font-size: 0.7rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-bottom: 8px;
+    }
+
+    .stat-value {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 2rem;
+      font-weight: 600;
+      color: var(--text);
+      line-height: 1;
+    }
+
+    .stat-value.currency { font-size: 1.6rem; }
+    .stat-sub { font-size: 0.75rem; color: var(--muted); margin-top: 6px; }
+
+    /* TABS */
+    .tabs {
+      display: flex;
+      gap: 4px;
+      margin-bottom: 24px;
+      background: var(--surface);
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid var(--border);
+      width: fit-content;
+    }
+
+    .tab {
+      padding: 8px 20px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      font-weight: 500;
+      color: var(--muted);
+      transition: all 0.2s;
+    }
+
+    .tab.active { background: var(--gold); color: #000; font-weight: 700; }
+    .tab:hover:not(.active) { color: var(--text); background: var(--surface2); }
+
+    /* TABLE */
+    .table-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 16px;
+    }
+
+    .search-box {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 8px 14px;
+      color: var(--text);
+      font-size: 0.85rem;
+      font-family: 'DM Sans', sans-serif;
+      width: 260px;
+      outline: none;
+      transition: border-color 0.2s;
+    }
+
+    .search-box:focus { border-color: var(--gold); }
+    .search-box::placeholder { color: var(--muted); }
+
+    .table-wrap {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+    }
+
+    table { width: 100%; border-collapse: collapse; }
+
+    thead tr { border-bottom: 1px solid var(--border); }
+
+    th {
+      padding: 14px 18px;
+      text-align: left;
+      font-size: 0.68rem;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted);
+      font-weight: 600;
+    }
+
+    td {
+      padding: 14px 18px;
+      font-size: 0.85rem;
+      border-bottom: 1px solid rgba(255,255,255,0.04);
+      vertical-align: middle;
+    }
+
+    tr:last-child td { border-bottom: none; }
+    tbody tr:hover { background: rgba(255,255,255,0.03); }
+
+    .mono { font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: var(--gold); }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+    }
+
+    .badge-pending { background: rgba(243,156,18,0.15); color: var(--warning); }
+    .badge-confirmed { background: rgba(52,152,219,0.15); color: var(--info); }
+    .badge-completed { background: rgba(46,204,113,0.15); color: var(--success); }
+    .badge-cancelled { background: rgba(231,76,60,0.15); color: var(--danger); }
+    .badge-order { background: rgba(245,166,35,0.12); color: var(--gold); }
+    .badge-booking { background: rgba(52,152,219,0.12); color: var(--info); }
+
+    .action-btns { display: flex; gap: 6px; }
+
+    select.status-select {
+      background: var(--surface2);
+      border: 1px solid var(--border);
+      color: var(--text);
+      font-size: 0.78rem;
+      padding: 4px 8px;
+      border-radius: 5px;
+      font-family: 'DM Sans', sans-serif;
+      cursor: pointer;
+      outline: none;
+    }
+
+    select.status-select:focus { border-color: var(--gold); }
+
+    .empty-state {
+      text-align: center;
+      padding: 80px 20px;
+      color: var(--muted);
+    }
+
+    .empty-state .icon { font-size: 3rem; margin-bottom: 12px; opacity: 0.4; }
+    .empty-state p { font-size: 0.9rem; }
+
+    /* TOAST */
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      background: var(--surface2);
+      border: 1px solid var(--gold);
+      color: var(--text);
+      padding: 14px 20px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      z-index: 9999;
+      opacity: 0;
+      transform: translateY(10px);
+      transition: all 0.3s;
+      pointer-events: none;
+    }
+
+    .toast.show { opacity: 1; transform: translateY(0); }
+
+    /* MODAL */
+    .modal-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.7);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .modal-overlay.open { display: flex; }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 32px;
+      min-width: 480px;
+      max-width: 90vw;
+    }
+
+    .modal h3 {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      margin-bottom: 20px;
+      color: var(--gold);
+    }
+
+    .modal-row {
+      display: flex;
+      justify-content: space-between;
+      padding: 10px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.875rem;
+    }
+
+    .modal-row:last-of-type { border-bottom: none; }
+    .modal-row .label { color: var(--muted); }
+    .modal-row .val { font-weight: 500; text-align: right; max-width: 60%; }
+
+    .modal-footer { margin-top: 24px; display: flex; gap: 10px; justify-content: flex-end; }
+
+    /* SECTION TITLE */
+    .section-title {
+      font-family: 'Bebas Neue', cursive;
+      font-size: 1.2rem;
+      letter-spacing: 2px;
+      color: var(--text);
+      margin-bottom: 4px;
+    }
+
+    .section-sub { font-size: 0.78rem; color: var(--muted); margin-bottom: 20px; }
+
+    @media (max-width: 1100px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <div class="brand">Rapidé</div>
+    <div class="sub">Admin Dashboard</div>
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-label">Main</div>
+    <div class="nav-item active" onclick="showView('overview')">
+      <span class="icon">📊</span> Overview
+    </div>
+    <div class="nav-item" onclick="showView('orders')">
+      <span class="icon">🛒</span> Orders
+      <span class="nav-badge" id="orders-badge">0</span>
+    </div>
+    <div class="nav-item" onclick="showView('bookings')">
+      <span class="icon">📅</span> Bookings
+      <span class="nav-badge" id="bookings-badge">0</span>
+    </div>
+    <div class="nav-label">Tools</div>
+    <div class="nav-item" onclick="clearAllData()">
+      <span class="icon">🗑️</span> Clear All Data
+    </div>
+    <div class="nav-item" onclick="generateDemoData()">
+      <span class="icon">⚡</span> Load Demo Data
+    </div>
+  </nav>
+  <div class="sidebar-footer">
+    Rapidé Auto Shop © 2026<br>
+    <span style="color:var(--gold);font-size:0.65rem;">ADMIN ACCESS ONLY</span>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<div class="main">
+  <header class="topbar">
+    <div class="topbar-title" id="page-title">DASHBOARD OVERVIEW</div>
+    <div class="topbar-right">
+      <button class="btn btn-ghost" onclick="refreshData()">↻ Refresh</button>
+      <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-danger" onclick="adminLogout()" style="border:1px solid var(--danger)">🚪 Logout</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+    <!-- OVERVIEW VIEW -->
+    <div id="view-overview">
+      <div class="stats-grid">
+        <div class="stat-card gold">
+          <div class="stat-label">Total Revenue</div>
+          <div class="stat-value currency" id="stat-revenue">₱0</div>
+          <div class="stat-sub">From completed orders</div>
+        </div>
+        <div class="stat-card blue">
+          <div class="stat-label">Total Orders</div>
+          <div class="stat-value" id="stat-orders">0</div>
+          <div class="stat-sub">All time orders</div>
+        </div>
+        <div class="stat-card green">
+          <div class="stat-label">Total Bookings</div>
+          <div class="stat-value" id="stat-bookings">0</div>
+          <div class="stat-sub">Service appointments</div>
+        </div>
+        <div class="stat-card red">
+          <div class="stat-label">Pending Action</div>
+          <div class="stat-value" id="stat-pending">0</div>
+          <div class="stat-sub">Needs attention</div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;">
+        <!-- Recent Orders -->
+        <div>
+          <div class="section-title">Recent Orders</div>
+          <div class="section-sub">Last 5 orders received</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Customer</th>
+                  <th>Amount</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-orders-body">
+                <tr><td colspan="4"><div class="empty-state"><div class="icon">🛒</div><p>No orders yet</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Recent Bookings -->
+        <div>
+          <div class="section-title">Recent Bookings</div>
+          <div class="section-sub">Last 5 service appointments</div>
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>Booking ID</th>
+                  <th>Customer</th>
+                  <th>Service</th>
+                  <th>Status</th>
+                </tr>
+              </thead>
+              <tbody id="recent-bookings-body">
+                <tr><td colspan="4"><div class="empty-state"><div class="icon">📅</div><p>No bookings yet</p></div></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ORDERS VIEW -->
+    <div id="view-orders" style="display:none;">
+      <div class="table-header">
+        <div>
+          <div class="section-title">All Orders</div>
+          <div class="section-sub">Customer cart checkouts</div>
+        </div>
+        <input class="search-box" type="text" placeholder="🔍  Search by name, product, ID…" oninput="filterTable(this.value, 'orders-body')"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Order ID</th>
+              <th>Date & Time</th>
+              <th>Customer</th>
+              <th>Contact</th>
+              <th>Items</th>
+              <th>Total</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="orders-body">
+            <tr><td colspan="8"><div class="empty-state"><div class="icon">🛒</div><p>No orders received yet.<br>Orders will appear here when customers checkout.</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOOKINGS VIEW -->
+    <div id="view-bookings" style="display:none;">
+      <div class="table-header">
+        <div>
+          <div class="section-title">All Bookings</div>
+          <div class="section-sub">Service appointment requests</div>
+        </div>
+        <input class="search-box" type="text" placeholder="🔍  Search by name, service, ID…" oninput="filterTable(this.value, 'bookings-body')"/>
+      </div>
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Booking ID</th>
+              <th>Date Received</th>
+              <th>Customer</th>
+              <th>Contact</th>
+              <th>Service</th>
+              <th>Appointment</th>
+              <th>Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody id="bookings-body">
+            <tr><td colspan="8"><div class="empty-state"><div class="icon">📅</div><p>No bookings received yet.<br>Bookings will appear here when customers submit the form.</p></div></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- DETAIL MODAL -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal" id="modal-box">
+    <h3 id="modal-title">Details</h3>
+    <div id="modal-body"></div>
+    <div class="modal-footer">
+      <button class="btn btn-ghost" onclick="document.getElementById('modal-overlay').classList.remove('open')">Close</button>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+  // ─── DATA LAYER ─────────────────────────────────────────────────────────────
+
+  function getOrders() {
+    try { return JSON.parse(localStorage.getItem('rapide_orders') || '[]'); } catch { return []; }
+  }
+
+  function getBookings() {
+    try { return JSON.parse(localStorage.getItem('rapide_bookings') || '[]'); } catch { return []; }
+  }
+
+  function saveOrders(data) { localStorage.setItem('rapide_orders', JSON.stringify(data)); }
+  function saveBookings(data) { localStorage.setItem('rapide_bookings', JSON.stringify(data)); }
+
+  function genId(prefix) {
+    return prefix + '-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase();
+  }
+
+  // ─── STATUS BADGE ────────────────────────────────────────────────────────────
+
+  function statusBadge(s) {
+    const map = {
+      pending: 'badge-pending',
+      confirmed: 'badge-confirmed',
+      completed: 'badge-completed',
+      cancelled: 'badge-cancelled'
+    };
+    const dot = { pending:'🟡', confirmed:'🔵', completed:'🟢', cancelled:'🔴' };
+    return `<span class="badge ${map[s] || 'badge-pending'}">${dot[s]||'⚪'} ${s.charAt(0).toUpperCase()+s.slice(1)}</span>`;
+  }
+
+  // ─── RENDER ─────────────────────────────────────────────────────────────────
+
+  function renderAll() {
+    const orders = getOrders();
+    const bookings = getBookings();
+
+    // Badges
+    document.getElementById('orders-badge').textContent = orders.length;
+    document.getElementById('bookings-badge').textContent = bookings.length;
+
+    // Stats
+    const revenue = orders.filter(o=>o.status==='completed').reduce((s,o)=>s+(o.total||0),0);
+    const pending = [...orders,...bookings].filter(x=>x.status==='pending').length;
+    document.getElementById('stat-revenue').textContent = '₱'+revenue.toLocaleString();
+    document.getElementById('stat-orders').textContent = orders.length;
+    document.getElementById('stat-bookings').textContent = bookings.length;
+    document.getElementById('stat-pending').textContent = pending;
+
+    renderOrders(orders);
+    renderBookings(bookings);
+    renderRecentOrders(orders.slice(-5).reverse());
+    renderRecentBookings(bookings.slice(-5).reverse());
+  }
+
+  function renderOrders(orders) {
+    const tbody = document.getElementById('orders-body');
+    if (!orders.length) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">🛒</div><p>No orders received yet.<br>Orders will appear here when customers checkout.</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = [...orders].reverse().map(o => `
+      <tr data-search="${o.id} ${o.name} ${o.email} ${o.phone} ${(o.items||[]).map(i=>i.name).join(' ')}">
+        <td><span class="mono">${o.id}</span></td>
+        <td style="font-size:0.78rem;color:var(--muted)">${new Date(o.timestamp).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'})}</td>
+        <td>
+          <div style="font-weight:500">${o.name||'—'}</div>
+          <div style="font-size:0.75rem;color:var(--muted)">${o.email||''}</div>
+        </td>
+        <td style="font-size:0.8rem">${o.phone||'—'}</td>
+        <td style="font-size:0.78rem;color:var(--muted);max-width:160px">${(o.items||[]).map(i=>`${i.qty}× ${i.name}`).join(', ')||'—'}</td>
+        <td><span class="mono" style="color:var(--gold)">₱${(o.total||0).toLocaleString()}</span></td>
+        <td>
+          <select class="status-select" onchange="updateStatus('order','${o.id}',this.value)">
+            ${['pending','confirmed','completed','cancelled'].map(s=>`<option value="${s}" ${o.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <div class="action-btns">
+            <button class="btn btn-ghost" onclick="viewOrder('${o.id}')" style="padding:5px 10px;font-size:0.75rem">View</button>
+            <button class="btn btn-danger" onclick="deleteEntry('order','${o.id}')" style="padding:5px 10px;font-size:0.75rem">✕</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderBookings(bookings) {
+    const tbody = document.getElementById('bookings-body');
+    if (!bookings.length) {
+      tbody.innerHTML = `<tr><td colspan="8"><div class="empty-state"><div class="icon">📅</div><p>No bookings received yet.<br>Bookings appear here when customers submit the form.</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = [...bookings].reverse().map(b => `
+      <tr data-search="${b.id} ${b.name} ${b.email} ${b.phone} ${b.service}">
+        <td><span class="mono">${b.id}</span></td>
+        <td style="font-size:0.78rem;color:var(--muted)">${new Date(b.timestamp).toLocaleString('en-PH',{dateStyle:'medium',timeStyle:'short'})}</td>
+        <td>
+          <div style="font-weight:500">${b.name||'—'}</div>
+          <div style="font-size:0.75rem;color:var(--muted)">${b.email||''}</div>
+        </td>
+        <td style="font-size:0.8rem">${b.phone||'—'}</td>
+        <td><span class="badge badge-booking">${b.service||'—'}</span></td>
+        <td style="font-size:0.8rem">${b.appointmentDate ? new Date(b.appointmentDate).toLocaleDateString('en-PH',{dateStyle:'medium'}) : '—'} ${b.appointmentTime||''}</td>
+        <td>
+          <select class="status-select" onchange="updateStatus('booking','${b.id}',this.value)">
+            ${['pending','confirmed','completed','cancelled'].map(s=>`<option value="${s}" ${b.status===s?'selected':''}>${s.charAt(0).toUpperCase()+s.slice(1)}</option>`).join('')}
+          </select>
+        </td>
+        <td>
+          <div class="action-btns">
+            <button class="btn btn-ghost" onclick="viewBooking('${b.id}')" style="padding:5px 10px;font-size:0.75rem">View</button>
+            <button class="btn btn-danger" onclick="deleteEntry('booking','${b.id}')" style="padding:5px 10px;font-size:0.75rem">✕</button>
+          </div>
+        </td>
+      </tr>
+    `).join('');
+  }
+
+  function renderRecentOrders(orders) {
+    const tbody = document.getElementById('recent-orders-body');
+    if (!orders.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state" style="padding:30px"><div class="icon">🛒</div><p>No orders yet</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = orders.map(o=>`
+      <tr>
+        <td><span class="mono">${o.id}</span></td>
+        <td style="font-weight:500">${o.name||'—'}</td>
+        <td><span class="mono" style="color:var(--gold)">₱${(o.total||0).toLocaleString()}</span></td>
+        <td>${statusBadge(o.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  function renderRecentBookings(bookings) {
+    const tbody = document.getElementById('recent-bookings-body');
+    if (!bookings.length) {
+      tbody.innerHTML = `<tr><td colspan="4"><div class="empty-state" style="padding:30px"><div class="icon">📅</div><p>No bookings yet</p></div></td></tr>`;
+      return;
+    }
+    tbody.innerHTML = bookings.map(b=>`
+      <tr>
+        <td><span class="mono">${b.id}</span></td>
+        <td style="font-weight:500">${b.name||'—'}</td>
+        <td><span class="badge badge-booking" style="font-size:0.7rem">${b.service||'—'}</span></td>
+        <td>${statusBadge(b.status)}</td>
+      </tr>
+    `).join('');
+  }
+
+  // ─── NAVIGATION ──────────────────────────────────────────────────────────────
+
+  function showView(view) {
+    ['overview','orders','bookings'].forEach(v => {
+      document.getElementById('view-'+v).style.display = v===view ? '' : 'none';
+    });
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+    event?.target?.closest('.nav-item')?.classList.add('active');
+    const titles = { overview:'DASHBOARD OVERVIEW', orders:'ALL ORDERS', bookings:'ALL BOOKINGS' };
+    document.getElementById('page-title').textContent = titles[view];
+  }
+
+  // ─── ACTIONS ─────────────────────────────────────────────────────────────────
+
+  function updateStatus(type, id, status) {
+    if (type === 'order') {
+      const orders = getOrders();
+      const i = orders.findIndex(o=>o.id===id);
+      if (i>-1) { orders[i].status = status; saveOrders(orders); }
+    } else {
+      const bookings = getBookings();
+      const i = bookings.findIndex(b=>b.id===id);
+      if (i>-1) { bookings[i].status = status; saveBookings(bookings); }
+    }
+    renderAll();
+    toast('Status updated to ' + status);
+  }
+
+  function deleteEntry(type, id) {
+    if (!confirm('Delete this entry? This cannot be undone.')) return;
+    if (type === 'order') {
+      saveOrders(getOrders().filter(o=>o.id!==id));
+    } else {
+      saveBookings(getBookings().filter(b=>b.id!==id));
+    }
+    renderAll();
+    toast('Entry deleted');
+  }
+
+  function viewOrder(id) {
+    const o = getOrders().find(x=>x.id===id);
+    if (!o) return;
+    document.getElementById('modal-title').textContent = 'Order ' + o.id;
+    document.getElementById('modal-body').innerHTML = `
+      ${row('Order ID', `<span class="mono">${o.id}</span>`)}
+      ${row('Date', new Date(o.timestamp).toLocaleString('en-PH'))}
+      ${row('Customer', o.name||'—')}
+      ${row('Email', o.email||'—')}
+      ${row('Phone', o.phone||'—')}
+      ${row('Address', o.address||'—')}
+      ${row('Items', (o.items||[]).map(i=>`${i.qty}× ${i.name} (₱${i.price})`).join('<br>')||'—')}
+      ${row('Total', `<span class="mono" style="color:var(--gold)">₱${(o.total||0).toLocaleString()}</span>`)}
+      ${row('Status', statusBadge(o.status))}
+      ${o.notes ? row('Notes', o.notes) : ''}
+    `;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function viewBooking(id) {
+    const b = getBookings().find(x=>x.id===id);
+    if (!b) return;
+    document.getElementById('modal-title').textContent = 'Booking ' + b.id;
+    document.getElementById('modal-body').innerHTML = `
+      ${row('Booking ID', `<span class="mono">${b.id}</span>`)}
+      ${row('Date Received', new Date(b.timestamp).toLocaleString('en-PH'))}
+      ${row('Customer', b.name||'—')}
+      ${row('Email', b.email||'—')}
+      ${row('Phone', b.phone||'—')}
+      ${row('Service', b.service||'—')}
+      ${row('Appointment', (b.appointmentDate ? new Date(b.appointmentDate).toLocaleDateString('en-PH',{dateStyle:'long'}) : '—') + ' ' + (b.appointmentTime||''))}
+      ${row('Vehicle', b.vehicle||'—')}
+      ${row('Status', statusBadge(b.status))}
+      ${b.message ? row('Message', b.message) : ''}
+    `;
+    document.getElementById('modal-overlay').classList.add('open');
+  }
+
+  function row(label, val) {
+    return `<div class="modal-row"><span class="label">${label}</span><span class="val">${val}</span></div>`;
+  }
+
+  function closeModal(e) {
+    if (e.target === document.getElementById('modal-overlay')) {
+      document.getElementById('modal-overlay').classList.remove('open');
+    }
+  }
+
+  function filterTable(q, tbodyId) {
+    const rows = document.querySelectorAll(`#${tbodyId} tr[data-search]`);
+    q = q.toLowerCase();
+    rows.forEach(tr => {
+      tr.style.display = tr.dataset.search.toLowerCase().includes(q) ? '' : 'none';
+    });
+  }
+
+  function refreshData() { renderAll(); toast('Data refreshed'); }
+
+  function clearAllData() {
+    if (!confirm('Clear ALL orders and bookings? This cannot be undone.')) return;
+    localStorage.removeItem('rapide_orders');
+    localStorage.removeItem('rapide_bookings');
+    renderAll();
+    toast('All data cleared');
+  }
+
+  function exportCSV() {
+    const orders = getOrders();
+    const bookings = getBookings();
+    let csv = 'TYPE,ID,Date,Customer,Email,Phone,Service/Items,Total/Appointment,Status\n';
+    orders.forEach(o => {
+      csv += `Order,${o.id},${new Date(o.timestamp).toLocaleDateString()},${o.name||''},${o.email||''},${o.phone||''},"${(o.items||[]).map(i=>`${i.qty}x ${i.name}`).join('; ')}",₱${o.total||0},${o.status}\n`;
+    });
+    bookings.forEach(b => {
+      csv += `Booking,${b.id},${new Date(b.timestamp).toLocaleDateString()},${b.name||''},${b.email||''},${b.phone||''},${b.service||''},${b.appointmentDate||''}${b.appointmentTime?' '+b.appointmentTime:''},${b.status}\n`;
+    });
+    const a = document.createElement('a');
+    a.href = 'data:text/csv,' + encodeURIComponent(csv);
+    a.download = 'rapide_export_' + Date.now() + '.csv';
+    a.click();
+    toast('CSV exported!');
+  }
+
+  function generateDemoData() {
+    const services = ['Oil Change','Brake Service','Wheel Alignment','Engine Check','Tint Installation'];
+    const names = ['Juan dela Cruz','Maria Santos','Carlo Reyes','Ana Lim','Bong Aquino'];
+    const products = [
+      {name:'High-Flow Air Filter',price:449},{name:'Castrol 5W-40 Oil',price:1180},{name:'Ceramic Brake Pads',price:1800}
+    ];
+
+    const orders = [];
+    for (let i=0;i<5;i++) {
+      const items = [products[i%products.length], products[(i+1)%products.length]].slice(0,Math.floor(Math.random()*2)+1);
+      const cartItems = items.map(p=>({name:p.name,price:p.price,qty:Math.floor(Math.random()*2)+1}));
+      orders.push({
+        id: genId('ORD'),
+        timestamp: Date.now() - i * 86400000 * Math.random() * 3,
+        name: names[i], email: names[i].toLowerCase().replace(' ','.')+'@gmail.com',
+        phone: '09'+Math.floor(100000000+Math.random()*900000000),
+        address: `Blk ${i+1} Lot ${i+2}, Cebu City`,
+        items: cartItems,
+        total: cartItems.reduce((s,x)=>s+x.price*x.qty,0),
+        status: ['pending','confirmed','completed','cancelled'][i%4]
+      });
+    }
+
+    const bookings = [];
+    for (let i=0;i<5;i++) {
+      bookings.push({
+        id: genId('BKG'),
+        timestamp: Date.now() - i * 86400000 * Math.random() * 3,
+        name: names[(i+2)%names.length],
+        email: names[(i+2)%names.length].toLowerCase().replace(' ','.')+'@gmail.com',
+        phone: '09'+Math.floor(100000000+Math.random()*900000000),
+        service: services[i%services.length],
+        appointmentDate: new Date(Date.now()+i*86400000*2).toISOString().split('T')[0],
+        appointmentTime: ['9:00 AM','11:00 AM','2:00 PM'][i%3],
+        vehicle: ['Toyota Vios 2020','Honda Civic 2019','Ford Ranger 2022','Mitsubishi Montero 2021','Suzuki Ertiga 2023'][i],
+        message: i%2===0 ? 'Please call before arriving.' : '',
+        status: ['pending','confirmed','completed'][i%3]
+      });
+    }
+
+    saveOrders(orders);
+    saveBookings(bookings);
+    renderAll();
+    toast('Demo data loaded! ⚡');
+  }
+
+  function toast(msg) {
+    const el = document.getElementById('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(el._t);
+    el._t = setTimeout(() => el.classList.remove('show'), 2800);
+  }
+
+  // ─── INIT ────────────────────────────────────────────────────────────────────
+  renderAll();
+
+  // Auto-refresh every 30 seconds to catch new orders/bookings from other tabs
+  setInterval(renderAll, 30000);
+</script>
+</body>
+</html>

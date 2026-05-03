@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Product Showcase - Rapidé Auto Service</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<style>
+  :root{--gold:#FFC107;--amber:#FF9800;--orange:#F4511E;--deep:#E65100;--dark:#111111;--ink:#1A1A1A;--mid:#555555;--light:#888888;--smoke:#F9F9F9;--cream:#FFFBF5;--white:#FFFFFF;--border:#E8E8E8;--bwarm:#F0EBE0;--yellow:#FFD600}
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Barlow',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#f0f0f0}::-webkit-scrollbar-thumb{background:var(--amber)}
+
+  /* NAV */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.98);backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;transition:box-shadow .3s}
+  .nav.scrolled{box-shadow:0 1px 24px rgba(0,0,0,.07)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:5px;color:var(--dark);text-decoration:none;display:flex;align-items:center}
+  .nav-logo .accent{color:var(--amber)}
+  .nav-logo .ndot{width:6px;height:6px;background:var(--amber);border-radius:50%;margin-left:2px;margin-top:-14px;flex-shrink:0}
+  .nav-links{display:flex;gap:0}
+  .nav-links a{color:var(--mid);text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;transition:color .2s,background .2s;letter-spacing:.3px}
+  .nav-links a:hover,.nav-links a.active{color:var(--amber);background:rgba(255,152,0,.07)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .nav-tel{font-size:12px;color:var(--light);font-weight:500;padding-right:14px;border-right:1px solid var(--border)}
+  .nav-tel span{color:var(--amber);font-weight:700}
+  .nav-cart{position:relative;cursor:pointer;background:var(--smoke);border:1.5px solid var(--border);color:var(--ink);width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .nav-cart:hover{border-color:var(--amber);background:rgba(255,152,0,.06)}
+  .nav-cart svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .nav-cart-badge{position:absolute;top:-7px;right:-7px;width:19px;height:19px;border-radius:50%;background:var(--orange);color:#fff;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center}
+  .nav-cart-badge.show{display:flex}
+  .nav-cta{background:var(--dark);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;letter-spacing:.3px}
+  .nav-cta:hover{background:var(--amber);transform:translateY(-1px)}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:all .3s;border-radius:2px}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger.open span:nth-child(2){opacity:0}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid var(--border);padding:1.5rem 2rem;flex-direction:column;gap:4px;box-shadow:0 12px 40px rgba(0,0,0,.08)}
+  .mobile-menu.open{display:flex}
+  .mobile-menu a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);transition:color .2s}
+  .mobile-menu a:hover{color:var(--amber)}
+  .mobile-menu .mob-cta{margin-top:.75rem;background:var(--dark);color:#fff;text-align:center;padding:14px;font-weight:700;border-radius:8px;border-bottom:none;font-size:14px}
+
+  /* PAGE HERO */
+  .page-hero{padding-top:68px;background:var(--dark);position:relative;overflow:hidden}
+  .page-hero-inner{max-width:1280px;margin:0 auto;padding:4rem 3rem;position:relative;z-index:2}
+  .page-hero-watermark{position:absolute;right:-2%;top:50%;transform:translateY(-50%);font-family:'Bebas Neue',sans-serif;font-size:clamp(120px,16vw,240px);line-height:1;letter-spacing:8px;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.04);pointer-events:none;user-select:none}
+  .page-hero-dots{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,152,0,.12) 1.5px,transparent 1.5px);background-size:24px 24px;pointer-events:none}
+  .breadcrumb{display:flex;align-items:center;gap:8px;margin-bottom:1.5rem;font-size:12px}
+  .breadcrumb a{color:rgba(255,255,255,.4);text-decoration:none;font-weight:600;transition:color .2s}
+  .breadcrumb a:hover{color:var(--amber)}
+  .breadcrumb span{color:rgba(255,255,255,.2)}
+  .breadcrumb .cur{color:var(--amber);font-weight:700}
+  .page-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(52px,7vw,90px);letter-spacing:2px;color:#fff;line-height:.9;margin-bottom:.875rem}
+  .page-title .ac{color:var(--amber)}
+  .page-desc{font-size:15px;color:rgba(255,255,255,.5);line-height:1.7;max-width:500px;font-weight:400}
+
+  /* SALE BAR */
+  .sale-bar{background:var(--cream);border-bottom:1px solid var(--bwarm);padding:11px 3rem;display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap}
+  .sale-lbl{font-size:13px;color:var(--mid);font-weight:600}
+  .sale-lbl strong{color:var(--orange);font-weight:800}
+  .sale-timer{display:flex;align-items:center;gap:8px}
+  .t-block{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:5px 14px;text-align:center;min-width:54px}
+  .t-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--dark);line-height:1;display:block}
+  .t-lbl{font-size:9px;color:var(--light);letter-spacing:.8px;text-transform:uppercase;display:block;margin-top:1px}
+  .t-sep{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--amber)}
+  .sale-pill{background:var(--amber);color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:100px}
+
+  /* MAIN CONTENT */
+  .main{max-width:1280px;margin:0 auto;padding:3rem 3rem 5rem}
+  .sec-hdr{display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:1.5rem;flex-wrap:wrap;gap:1rem}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:.5rem}
+  .eyebrow-line{width:24px;height:2px;background:var(--amber)}
+  .eyebrow-text{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:2.5px;text-transform:uppercase}
+  .sec-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(36px,4vw,52px);letter-spacing:1.5px;color:var(--dark);line-height:.95}
+  .sec-h .ac{color:var(--amber)}
+  .prod-count{font-size:13px;color:var(--light);font-weight:600}
+
+  /* FILTER TABS */
+  .ftabs{display:flex;gap:8px;margin-bottom:2rem;flex-wrap:wrap}
+  .ftab{background:var(--white);border:1.5px solid var(--border);color:var(--mid);padding:8px 20px;font-size:12px;font-family:'Barlow',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+  .ftab:hover{border-color:var(--amber);color:var(--amber)}
+  .ftab.active{background:var(--dark);border-color:var(--dark);color:#fff}
+
+  /* PRODUCT GRID */
+  .prod-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:1.5rem}
+  .prod-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;position:relative;cursor:pointer;transition:box-shadow .25s,transform .25s,border-color .25s;display:flex;flex-direction:column;overflow:hidden}
+  .prod-card:hover{box-shadow:0 20px 56px rgba(0,0,0,.08),0 2px 10px rgba(255,152,0,.08);transform:translateY(-6px);border-color:rgba(255,152,0,.3)}
+  .prod-card.hidden{display:none}
+  .prod-badges{position:absolute;top:12px;left:12px;z-index:2;display:flex;gap:5px;flex-wrap:wrap}
+  .pb{font-size:10px;font-weight:800;padding:3px 10px;border-radius:100px;letter-spacing:.5px;text-transform:uppercase}
+  .pb.sale{background:var(--amber);color:#fff}
+  .pb.new{background:var(--dark);color:#fff}
+  .pb.hot{background:var(--orange);color:#fff}
+  .prod-wish{position:absolute;top:12px;right:12px;z-index:2;width:34px;height:34px;background:rgba(255,255,255,.9);border:1.5px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;transition:all .2s;backdrop-filter:blur(4px)}
+  .prod-wish:hover,.prod-wish.wished{border-color:var(--orange);background:rgba(244,81,30,.07)}
+  .prod-wish svg{width:14px;height:14px;transition:all .2s}
+  .prod-wish.wished svg{fill:var(--orange);stroke:var(--orange)}
+  .prod-img{height:200px;display:flex;align-items:center;justify-content:center;background:#FAFAFA;position:relative;overflow:hidden;border-bottom:1px solid var(--border)}
+  .prod-img img{width:100%;height:100%;object-fit:contain;padding:20px;transition:transform .35s ease;filter:drop-shadow(0 6px 14px rgba(0,0,0,.1))}
+  .prod-card:hover .prod-img img{transform:scale(1.06)}
+  .prod-body{padding:1.25rem;flex:1;display:flex;flex-direction:column}
+  .prod-cat{font-size:10px;color:var(--amber);letter-spacing:2px;text-transform:uppercase;font-weight:700;margin-bottom:5px}
+  .prod-name{font-size:15px;font-weight:800;color:var(--dark);margin-bottom:5px;line-height:1.3}
+  .prod-desc{font-size:12px;color:var(--light);line-height:1.65;margin-bottom:14px;flex:1}
+  .prod-prices{display:flex;align-items:baseline;gap:8px;margin-bottom:3px}
+  .prod-price{font-family:'Bebas Neue',sans-serif;font-size:28px;color:var(--dark);letter-spacing:.5px}
+  .prod-old{font-size:12px;color:#bbb;text-decoration:line-through}
+  .prod-save{font-size:11px;color:var(--amber);font-weight:700;margin-bottom:13px}
+  .prod-btn{width:100%;background:var(--dark);border:none;color:#fff;padding:11px;font-size:12px;font-family:'Barlow',sans-serif;font-weight:700;cursor:pointer;transition:all .2s;border-radius:9px;letter-spacing:.3px}
+  .prod-btn:hover{background:var(--amber);box-shadow:0 4px 14px rgba(255,152,0,.35)}
+
+  /* BOOKING MODAL */
+  .modal-ov{position:fixed;inset:0;z-index:9999;background:rgba(17,17,17,.65);backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:2rem}
+  .modal-ov.open{opacity:1;pointer-events:all}
+  .modal{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:2.5rem;transform:translateY(24px);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.2)}
+  .modal-ov.open .modal{transform:translateY(0)}
+  .modal-close{position:absolute;top:1.25rem;right:1.25rem;width:34px;height:34px;background:var(--smoke);border:1.5px solid var(--border);color:var(--mid);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s;font-family:'Barlow',sans-serif}
+  .modal-close:hover{border-color:var(--orange);color:var(--orange)}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1.5px;color:var(--dark);margin-bottom:4px}
+  .modal-title .ac{color:var(--amber)}
+  .modal-sub{font-size:13px;color:var(--light);margin-bottom:2rem;line-height:1.6}
+  .fgrp{margin-bottom:1.25rem}
+  .flabel{font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
+  .finput,.fsel,.ftxt{width:100%;background:var(--smoke);border:1.5px solid var(--border);color:var(--dark);padding:12px 14px;font-size:14px;font-family:'Barlow',sans-serif;border-radius:9px;transition:border-color .2s;outline:none;appearance:none}
+  .finput:focus,.fsel:focus,.ftxt:focus{border-color:var(--amber);background:#fff}
+  .ftxt{resize:vertical;min-height:80px}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .fsubmit{width:100%;background:var(--dark);color:#fff;border:none;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;border-radius:10px;transition:all .2s;margin-top:.5rem;letter-spacing:.3px}
+  .fsubmit:hover{background:var(--amber);transform:translateY(-1px)}
+
+  /* CART DRAWER */
+  .cart-ov{position:fixed;inset:0;z-index:8888;background:rgba(17,17,17,.4);backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+  .cart-ov.open{opacity:1;pointer-events:all}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;z-index:8889;width:380px;max-width:100vw;background:#fff;border-left:1.5px solid var(--border);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 60px rgba(0,0,0,.1)}
+  .cart-drawer.open{transform:translateX(0)}
+  .cart-hdr{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .cart-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--dark)}
+  .cart-cnt{font-size:12px;color:var(--light);font-weight:600;margin-top:1px}
+  .cart-cls{width:34px;height:34px;background:var(--smoke);border:1.5px solid var(--border);color:var(--mid);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s;font-family:'Barlow',sans-serif}
+  .cart-cls:hover{border-color:var(--orange);color:var(--orange)}
+  .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+  .cart-empty{text-align:center;padding:3rem 1rem;color:var(--light);font-size:14px;font-weight:500}
+  .ce-icon-box{width:60px;height:60px;background:var(--smoke);border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+  .ce-icon-box svg{width:26px;height:26px;stroke:var(--light);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:center}
+  .ci-ico{width:52px;height:52px;background:var(--smoke);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+  .ci-ico img{width:44px;height:44px;object-fit:contain}
+  .ci-inf{flex:1}
+  .ci-nm{font-size:13px;color:var(--dark);font-weight:700;margin-bottom:2px}
+  .ci-pr{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--amber);letter-spacing:.5px}
+  .ci-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qbtn{width:26px;height:26px;background:var(--smoke);border:1.5px solid var(--border);color:var(--dark);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .2s;font-weight:700;font-family:'Barlow',sans-serif}
+  .qbtn:hover{border-color:var(--amber);background:rgba(255,152,0,.07)}
+  .qnum{font-size:13px;color:var(--dark);font-weight:700;min-width:20px;text-align:center}
+  .ci-rm{background:transparent;border:none;color:#ccc;cursor:pointer;font-size:16px;transition:color .2s;padding:4px;font-family:'Barlow',sans-serif}
+  .ci-rm:hover{color:#E53935}
+  .cart-foot{padding:1.5rem;border-top:1px solid var(--border);background:var(--smoke)}
+  .cart-sub{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .cs-lbl{font-size:11px;color:var(--light);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+  .cs-val{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--dark);letter-spacing:1px}
+  .cart-ckout{width:100%;background:var(--dark);color:#fff;border:none;padding:14px;font-size:14px;font-weight:700;font-family:'Barlow',sans-serif;border-radius:10px;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+  .cart-ckout:hover{background:var(--amber);transform:translateY(-1px)}
+
+  /* TOAST */
+  .toast{position:fixed;bottom:2rem;right:2rem;z-index:99999;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.875rem 1.25rem;display:flex;align-items:center;gap:12px;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;max-width:300px;box-shadow:0 12px 40px rgba(0,0,0,.1)}
+  .toast.show{transform:translateY(0);opacity:1;pointer-events:all}
+  .toast-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0}
+  .toast-text{font-size:13px;color:var(--ink);line-height:1.5;font-weight:500}
+  .toast-text strong{color:var(--amber)}
+
+  /* FOOTER */
+  footer{background:var(--dark);padding:4rem 3rem 2rem}
+  .footer-inner{max-width:1280px;margin:0 auto}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+  .flogo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:5px;color:#fff;display:block;margin-bottom:1rem;text-decoration:none}
+  .flogo em{color:var(--amber);font-style:normal}
+  .fbrand-p{font-size:13px;color:rgba(255,255,255,.35);line-height:1.75;max-width:260px;font-weight:300}
+  .fsocials{display:flex;gap:8px;margin-top:1.5rem}
+  .fsoc{width:36px;height:36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);cursor:pointer;text-decoration:none;transition:all .2s;font-family:'Barlow',sans-serif;letter-spacing:.5px}
+  .fsoc:hover{border-color:var(--amber);color:var(--amber)}
+  .fcol-ttl{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.25rem}
+  .fcol ul{list-style:none}
+  .fcol li{margin-bottom:10px}
+  .fcol a{font-size:13px;color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s}
+  .fcol a:hover{color:#fff}
+  .footer-bot{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  .fcopy{font-size:12px;color:rgba(255,255,255,.2)}
+  .flegal{display:flex;gap:1.5rem}
+  .flegal a{font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s}
+  .flegal a:hover{color:rgba(255,255,255,.5)}
+
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* CHECKOUT MODAL */
+  .ckout-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:9000}
+  .ckout-ov.open{display:block}
+  .ckout-modal{display:none;position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(.96);width:96%;max-width:600px;background:#fff;border-radius:16px;box-shadow:0 20px 60px rgba(0,0,0,.18);z-index:9001;flex-direction:column;overflow:hidden;opacity:0;transition:opacity .25s,transform .25s;max-height:92vh}
+  .ckout-modal.open{display:flex;opacity:1;transform:translate(-50%,-50%) scale(1)}
+  .ckout-hdr{display:flex;align-items:center;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #eee;flex-shrink:0}
+  .ckout-hdr-left{display:flex;align-items:center;gap:10px}
+  .ckout-hdr-icon{width:34px;height:34px;border-radius:9px;background:#1a3c5e;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .ckout-title{font-size:15px;font-weight:600;color:#1a1a2e}
+  .ckout-sub{font-size:12px;color:#999;margin-top:2px}
+  .ckout-cls{width:30px;height:30px;border-radius:8px;border:1px solid #e5e5e5;background:transparent;cursor:pointer;font-size:14px;color:#888;display:flex;align-items:center;justify-content:center;transition:background .15s;font-family:'Barlow',sans-serif}
+  .ckout-cls:hover{background:#f5f5f5}
+  .ckout-steps{display:flex;align-items:center;padding:12px 20px;border-bottom:1px solid #eee;flex-shrink:0}
+  .ck-step{display:flex;align-items:center;gap:6px;flex:1}
+  .ck-dot{width:24px;height:24px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:600;flex-shrink:0;transition:all .3s}
+  .ck-dot.ck-active{background:#1a3c5e;color:#fff}
+  .ck-dot.ck-done{background:#1a7c4e;color:#fff}
+  .ck-dot.ck-inactive{background:#f0f0f0;color:#aaa}
+  .ck-lbl{font-size:11.5px;color:#aaa}
+  .ck-lbl-active{color:#1a1a2e;font-weight:500}
+  .ck-sep{width:18px;height:1px;background:#e5e5e5;margin:0 4px;flex-shrink:0}
+  .ckout-body{flex:1;overflow-y:auto;padding:16px 20px;display:flex;flex-direction:column;gap:11px}
+  .ck-page{display:flex;flex-direction:column;gap:10px}
+  .ck-hidden{display:none!important}
+  .ck-sec-lbl{font-size:10.5px;font-weight:600;letter-spacing:.07em;text-transform:uppercase;color:#999}
+  .ck-order-list{background:#f8f9fb;border-radius:10px;border:1px solid #eee;overflow:hidden}
+  .ck-order-item{display:flex;align-items:center;gap:12px;padding:10px 14px;border-bottom:1px solid #f0f0f0}
+  .ck-order-item:last-child{border-bottom:none}
+  .ck-order-icon{width:36px;height:36px;border-radius:8px;background:#e8f0f8;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;overflow:hidden}
+  .ck-order-icon img{width:32px;height:32px;object-fit:contain}
+  .ck-order-info{flex:1}
+  .ck-order-name{font-size:13px;font-weight:500;color:#1a1a2e}
+  .ck-order-sku{font-size:11px;color:#aaa;margin-top:1px}
+  .ck-order-right{text-align:right;flex-shrink:0}
+  .ck-order-qty{font-size:11px;color:#aaa}
+  .ck-order-price{font-size:13px;font-weight:600;color:#1a3c5e}
+  .ck-order-total-row{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;background:#eef3f8;font-size:13px;font-weight:600;color:#1a1a2e}
+  .ck-info-banner{display:flex;gap:8px;align-items:flex-start;background:#eef3f8;border:1px solid #c5d8ea;border-radius:9px;padding:10px 13px;font-size:12px;color:#1a3c5e;line-height:1.6}
+  .ck-info-banner strong{font-weight:600}
+  .ck-frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+  .ck-frow.ck-full{grid-template-columns:1fr}
+  .ck-fgroup{display:flex;flex-direction:column;gap:4px}
+  .ck-label{font-size:12px;font-weight:500;color:#555}
+  .ck-req{color:#e74c3c}
+  .ck-input{width:100%;padding:8px 11px;font-size:13px;font-family:inherit;border:1px solid #ddd;border-radius:8px;background:#fff;color:#1a1a2e;transition:border-color .2s,box-shadow .2s;outline:none}
+  .ck-input:focus{border-color:#1a3c5e;box-shadow:0 0 0 3px rgba(26,60,94,.1)}
+  .ck-input.ck-error{border-color:#e74c3c;box-shadow:0 0 0 3px rgba(231,76,60,.1)}
+  .ck-textarea{resize:vertical;min-height:70px}
+  .ck-branch-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .ck-branch{padding:11px 13px;border:1px solid #e0e0e0;border-radius:9px;cursor:pointer;transition:all .2s;background:#fff}
+  .ck-branch:hover{border-color:#1a3c5e;background:rgba(26,60,94,.04)}
+  .ck-branch.selected{border:1.5px solid #1a3c5e;background:rgba(26,60,94,.06)}
+  .ck-branch-name{font-size:13px;font-weight:500;color:#1a1a2e}
+  .ck-branch-addr{font-size:11px;color:#999;margin-top:2px}
+  .ck-tnc-box{background:#f8f9fb;border:1px solid #eee;border-radius:10px;padding:13px 15px;max-height:155px;overflow-y:auto;font-size:12.5px;color:#555;line-height:1.65}
+  .ck-tnc-title{font-size:12.5px;font-weight:600;color:#1a1a2e;margin-bottom:10px}
+  .ck-tnc-item{display:flex;gap:8px;margin-bottom:8px}
+  .ck-tnc-dot{width:5px;height:5px;border-radius:50%;background:#1a3c5e;flex-shrink:0;margin-top:6px}
+  .ck-tnc-note{font-size:11.5px;color:#999;font-style:italic;line-height:1.6;margin-top:10px;border-top:1px solid #eee;padding-top:10px}
+  .ck-agree-row{display:flex;gap:10px;align-items:flex-start;padding:11px 13px;border:1px solid #e0e0e0;border-radius:9px;cursor:pointer;background:#fff;transition:border-color .2s}
+  .ck-agree-row:hover{border-color:#1a3c5e}
+  .ck-chk{width:15px;height:15px;margin-top:1px;accent-color:#1a3c5e;cursor:pointer;flex-shrink:0}
+  .ck-agree-lbl{font-size:12px;color:#666;line-height:1.6;cursor:pointer}
+  .ck-agree-lbl strong{color:#1a1a2e;font-weight:600}
+  .ck-err{font-size:11.5px;color:#e74c3c;margin-top:2px}
+  .ck-summary-box{background:#f8f9fb;border-radius:10px;border:1px solid #eee;padding:12px 14px}
+  .ck-sum-row{display:flex;justify-content:space-between;align-items:center;padding:5px 0;border-bottom:1px solid #f0f0f0;font-size:13px;color:#1a1a2e}
+  .ck-sum-row:last-child{border-bottom:none}
+  .ck-sum-lbl{color:#999;flex:1}
+  .ck-sum-total{font-weight:600;font-size:14px;padding-top:9px}
+  .ckout-foot{display:flex;gap:10px;align-items:center;padding:14px 20px;border-top:1px solid #eee;flex-shrink:0}
+  .ck-btn-back{flex:1;padding:10px;font-size:13px;font-weight:500;border:1px solid #ddd;border-radius:9px;background:transparent;color:#888;cursor:pointer;font-family:inherit;transition:all .2s}
+  .ck-btn-back:hover{background:#f5f5f5}
+  .ck-btn-next{flex:2;padding:10px;font-size:13px;font-weight:600;border:none;border-radius:9px;background:#1a3c5e;color:#fff;cursor:pointer;font-family:inherit;transition:background .2s}
+  .ck-btn-next:hover{background:#122d47}
+  .ck-success-pg{align-items:center;justify-content:center;text-align:center;padding:28px 20px;gap:10px}
+  .ck-success-icon{width:60px;height:60px;border-radius:50%;background:rgba(26,124,78,.1);display:flex;align-items:center;justify-content:center}
+  .ck-success-title{font-size:18px;font-weight:600;color:#1a1a2e}
+  .ck-success-sub{font-size:13px;color:#777;line-height:1.65;max-width:340px}
+  .ck-ref-pill{background:#f0f4f8;border:1px solid #dde6ef;border-radius:20px;padding:6px 20px;font-size:14px;font-weight:600;color:#1a3c5e;letter-spacing:.06em}
+  .ck-done-btn{margin-top:8px;padding:10px 32px;background:#1a3c5e;color:#fff;border:none;border-radius:9px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;transition:background .2s}
+  .ck-done-btn:hover{background:#122d47}
+
+  @media(max-width:960px){.nav-links,.nav-tel{display:none}.hamburger{display:flex}.footer-top{grid-template-columns:1fr 1fr;gap:2rem}}
+  @media(max-width:600px){.footer-top{grid-template-columns:1fr}.footer-bot{flex-direction:column;text-align:center}.frow{grid-template-columns:1fr}.cart-drawer{width:100vw}.sale-bar{gap:1rem}.main{padding:2rem 1.5rem 4rem}.page-hero-inner{padding:3rem 1.5rem}.nav,.mobile-menu{padding-left:1.5rem;padding-right:1.5rem}.ckout-modal{width:100%;max-width:100%;top:auto;bottom:0;left:0;right:0;transform:translateY(100%);border-radius:18px 18px 0 0;max-height:90vh}.ckout-modal.open{transform:translateY(0)}.ck-frow{grid-template-columns:1fr}.ck-branch-grid{grid-template-columns:1fr}.ck-sep,.ck-lbl{display:none}}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html">Rapid<span class="accent">é</span><span class="ndot"></span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link">Home</a>
+    <a href="products.html" class="nav-link active">Products</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="tires.html" class="nav-link">Tires</a>
+    <a href="index.html#locations" class="nav-link">Locations</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-tel">Hotline: <span>0919-2694-103-Rapidé</span></div>
+    <button class="nav-cart" id="cartToggle" title="Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav-cart-badge" id="cartBadge">0</span>
+    </button>
+    <button class="nav-cta" id="bookNowBtn">Book Now</button>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="services.html">Services</a>
+  <a href="index.html#locations">Locations</a>
+  <a href="#" class="mob-cta" id="mobBookBtn">Book an Appointment</a>
+</div>
+
+<!-- PAGE HERO -->
+<div class="page-hero">
+  <div class="page-hero-dots"></div>
+  <div class="page-hero-watermark">PRODUCTS</div>
+  <div class="page-hero-inner">
+    <div class="breadcrumb">
+      <a href="index.html">Home</a>
+      <span>›</span>
+      <span class="cur">Products</span>
+    </div>
+    <div class="page-title">AUTO <span class="ac">PRODUCTS</span></div>
+    <p class="page-desc">Shop genuine parts and fluids. Casa-quality at honest prices delivered to your door or installed on-site.</p>
+  </div>
+</div>
+
+<!-- SALE BAR -->
+<div class="sale-bar">
+  <div class="sale-lbl">● <strong>Monthly Sale</strong> — Limited time only. Ends in:</div>
+  <div class="sale-timer">
+    <div class="t-block"><span class="t-num" id="td">12</span><span class="t-lbl">Days</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="th">08</span><span class="t-lbl">Hrs</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="tm">33</span><span class="t-lbl">Min</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="ts">57</span><span class="t-lbl">Sec</span></div>
+  </div>
+  <div class="sale-pill">Up to 40% OFF</div>
+</div>
+
+<!-- MAIN PRODUCTS -->
+<div class="main reveal">
+  <div class="sec-hdr">
+    <div>
+      <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Monthly Sale</span></div>
+      <div class="sec-h">ALL <span class="ac">PRODUCTS</span></div>
+    </div>
+    <div class="prod-count" id="prodCount">Showing 8 products</div>
+  </div>
+
+  <div class="ftabs">
+    <button class="ftab active" data-filter="all">All</button>
+    <button class="ftab" data-filter="lubricants">Lubricants</button>
+    <button class="ftab" data-filter="electrical">Electrical</button>
+    <button class="ftab" data-filter="brakes">Brakes</button>
+    <button class="ftab" data-filter="filters">Filters</button>
+    <button class="ftab" data-filter="accessories">Accessories</button>
+    <button class="ftab" data-filter="fluids">Fluids</button>
+  </div>
+
+  <div class="prod-grid" id="productGrid">
+
+    <!-- 1: Castrol EDGE -->
+    <div class="prod-card" data-cat="lubricants">
+      <div class="prod-badges"><span class="pb sale">-30%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product1.webp" alt="Castrol EDGE 5W-40" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Castrol+EDGE'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Lubricants</div>
+        <div class="prod-name">Castrol EDGE 5W-40</div>
+        <div class="prod-desc">4L full synthetic engine oil. Extended drain intervals for petrol &amp; diesel engines.</div>
+        <div class="prod-prices"><div class="prod-price">₱1,199</div><div class="prod-old">₱1,699</div></div>
+        <div class="prod-save">You save ₱500</div>
+        <button class="prod-btn" onclick="addToCart(this,'Castrol EDGE 5W-40',1199,'OIL','https://upload.wikimedia.org/wikipedia/commons/thumb/d/d4/Castrol_EDGE_5W-40_LL.jpg/320px-Castrol_EDGE_5W-40_LL.jpg')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 2: Motolite Battery -->
+    <div class="prod-card" data-cat="electrical">
+      <div class="prod-badges"><span class="pb new">New</span><span class="pb hot">Hot</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product2.webp" alt="Motolite MF Battery" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Motolite+Battery'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Electrical</div>
+        <div class="prod-name">Motolite MF Battery 55Ah</div>
+        <div class="prod-desc">Maintenance-free. Fits most Japanese and Korean car models. 1-year warranty.</div>
+        <div class="prod-prices"><div class="prod-price">₱3,499</div><div class="prod-old">₱4,299</div></div>
+        <div class="prod-save">You save ₱800</div>
+        <button class="prod-btn" onclick="addToCart(this,'Motolite MF Battery 55Ah',3499,'BAT','https://motolite.com/storage/media/products/Maintenance-Free/maintenance-free-battery.png')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 3: Ceramic Brake Pads -->
+    <div class="prod-card" data-cat="brakes">
+      <div class="prod-badges"><span class="pb sale">-25%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product3.webp" alt="Ceramic Brake Pads" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Brake+Pads'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Brakes</div>
+        <div class="prod-name">Ceramic Brake Pads</div>
+        <div class="prod-desc">Low dust, quiet performance. Front or rear set. Fits most sedans and SUVs.</div>
+        <div class="prod-prices"><div class="prod-price">₱1,499</div><div class="prod-old">₱1,999</div></div>
+        <div class="prod-save">You save ₱500</div>
+        <button class="prod-btn" onclick="addToCart(this,'Ceramic Brake Pads',1499,'BRK','../images/product3.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 4: Air Filter -->
+    <div class="prod-card" data-cat="filters">
+      <div class="prod-badges"><span class="pb sale">-40%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product4.webp" alt="High-Flow Air Filter" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Air+Filter'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Filters</div>
+        <div class="prod-name">High-Flow Air Filter</div>
+        <div class="prod-desc">Improves engine breathing and performance. Toyota, Honda, Mitsubishi compatible.</div>
+        <div class="prod-prices"><div class="prod-price">₱449</div><div class="prod-old">₱749</div></div>
+        <div class="prod-save">You save ₱300</div>
+        <button class="prod-btn" onclick="addToCart(this,'High-Flow Air Filter',449,'FLTR','../images/product4.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 5: Wiper Blades -->
+    <div class="prod-card" data-cat="accessories">
+      <div class="prod-badges"><span class="pb sale">-20%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product5.webp" alt="Bosch Beam Wiper Blades" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Wiper+Blades'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Accessories</div>
+        <div class="prod-name">Bosch Beam Wiper Blades</div>
+        <div class="prod-desc">Frameless design. Streak-free even in heavy rain. 24" + 18" set included.</div>
+        <div class="prod-prices"><div class="prod-price">₱599</div><div class="prod-old">₱749</div></div>
+        <div class="prod-save">You save ₱150</div>
+        <button class="prod-btn" onclick="addToCart(this,'Bosch Beam Wiper Blades',599,'WPR','../images/product5.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 6: Radiator Coolant -->
+    <div class="prod-card" data-cat="fluids">
+      <div class="prod-badges"><span class="pb sale">-35%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product6.webp" alt="Radiator Coolant" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Coolant'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Fluids</div>
+        <div class="prod-name">Radiator Coolant 1L</div>
+        <div class="prod-desc">Long-life formula. Prevents overheating and corrosion in all climates.</div>
+        <div class="prod-prices"><div class="prod-price">₱299</div><div class="prod-old">₱459</div></div>
+        <div class="prod-save">You save ₱160</div>
+        <button class="prod-btn" onclick="addToCart(this,'Radiator Coolant 1L',299,'CLT','../images/product6.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 7: Gear Oil -->
+    <div class="prod-card" data-cat="lubricants">
+      <div class="prod-badges"><span class="pb sale">-18%</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product7.webp" alt="Gear Oil 80W-90" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Gear+Oil'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Lubricants</div>
+        <div class="prod-name">Gear Oil 80W-90 1L</div>
+        <div class="prod-desc">Manual transmission and differential lubricant. Superior gear protection.</div>
+        <div class="prod-prices"><div class="prod-price">₱349</div><div class="prod-old">₱425</div></div>
+        <div class="prod-save">You save ₱76</div>
+        <button class="prod-btn" onclick="addToCart(this,'Gear Oil 80W-90',349,'GEAR','../images/product7.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+    <!-- 8: NGK Spark Plugs -->
+    <div class="prod-card" data-cat="electrical">
+      <div class="prod-badges"><span class="pb new">New</span></div>
+      <button class="prod-wish" onclick="toggleWish(this)"><svg viewBox="0 0 24 24" stroke="#FF9800" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.84 4.61a5.5 5.5 0 00-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 00-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 000-7.78z"/></svg></button>
+      <div class="prod-img">
+        <img src="../images/product8.webp" alt="NGK Iridium Spark Plugs" onerror="this.src='https://placehold.co/200x200/f5f5f5/999?text=Spark+Plugs'">
+      </div>
+      <div class="prod-body">
+        <div class="prod-cat">Electrical</div>
+        <div class="prod-name">NGK Iridium Spark Plugs</div>
+        <div class="prod-desc">Set of 4. Better ignition and fuel efficiency. Long-lasting iridium tip.</div>
+        <div class="prod-prices"><div class="prod-price">₱1,299</div><div class="prod-old">₱1,600</div></div>
+        <div class="prod-save">You save ₱301</div>
+        <button class="prod-btn" onclick="addToCart(this,'NGK Iridium Spark Plugs',1299,'SPK','../images/product8.webp')">Add to Cart</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a class="flogo" href="index.html">Rapidé<em></em></a>
+        <p class="fbrand-p">Auto Service Experts delivering casa-quality care at honest, affordable prices. Your trusted partner for every kilometer of the road ahead.</p>
+        <div class="fsocials"><a class="fsoc" href="#">FB</a><a class="fsoc" href="#">IG</a><a class="fsoc" href="#">TT</a><a class="fsoc" href="#">YT</a></div>
+      </div>
+      <div class="fcol"><div class="fcol-ttl">Services</div><ul><li><a href="services.html">Oil Change</a></li><li><a href="services.html">Tire Service</a></li><li><a href="services.html">Brake Service</a></li><li><a href="services.html">Aircon Service</a></li><li><a href="services.html">Battery Check</a></li><li><a href="services.html">Full Inspection</a></li></ul></div>
+      <div class="fcol"><div class="fcol-ttl">Company</div><ul><li><a href="#">About Rapidé</a></li><li><a href="#">Careers</a></li><li><a href="#">News &amp; Promos</a></li><li><a href="#">Franchise</a></li><li><a href="#">Contact Us</a></li></ul></div>
+      <div class="fcol"><div class="fcol-ttl">Support</div><ul><li><a href="#">FAQs</a></li><li><a href="#">Warranty Policy</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">Track My Booking</a></li><li><a href="#">0917-555-RAPID</a></li></ul></div>
+    </div>
+    <div class="footer-bot">
+      <div class="fcopy">© 2026 Rapidé Auto Services. All rights reserved. San Jose de Buenavista, Philippines.</div>
+      <div class="flegal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-ov" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="eyebrow" style="margin-bottom:.5rem"><div class="eyebrow-line"></div><span class="eyebrow-text">San Jose de Buenavista</span></div>
+    <div class="modal-title">BOOK AN <span class="ac">APPOINTMENT</span></div>
+    <p class="modal-sub">Fill in your details and we'll confirm within 30 minutes.</p>
+    <div class="fgrp"><label class="flabel">Full Name</label><input type="text" id="bk_name" class="finput" placeholder="Juan dela Cruz"></div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Phone Number</label><input type="tel" id="bk_phone" class="finput" placeholder="09XX-XXX-XXXX"></div>
+      <div class="fgrp"><label class="flabel">Email</label><input type="email" id="bk_email" class="finput" placeholder="juan@email.com"></div>
+    </div>
+    <div class="fgrp"><label class="flabel">Service</label>
+      <select class="fsel" id="modalService">
+        <option value="">— Select a service —</option>
+        <option>Oil Change</option><option>Tire Service</option><option>Aircon Service</option>
+        <option>Brake Service</option><option>Battery Check</option><option>Full Inspection</option>
+        <option>Engine Flush</option><option>Transmission Service</option>
+        <option>Basic Care Package</option><option>Full Shield Package</option><option>Premium Plus Package</option>
+      </select>
+    </div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Branch</label><select class="fsel"><option>San Jose</option></select></div>
+      <div class="fgrp"><label class="flabel">Preferred Date</label><input type="date" id="bk_date" class="finput"></div>
+    </div>
+    <div class="fgrp"><label class="flabel">Car Model &amp; Year</label><input type="text" id="bk_vehicle" class="finput" placeholder="e.g. Toyota Vios 2022"></div>
+    <div class="fgrp"><label class="flabel">Notes (Optional)</label><textarea id="bk_notes" class="ftxt" placeholder="Any concerns or special requests?"></textarea></div>
+    <button class="fsubmit" onclick="submitBooking()">Confirm Appointment →</button>
+  </div>
+</div>
+
+<!-- CART OVERLAY + DRAWER -->
+<div class="cart-ov" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-hdr">
+    <div><div class="cart-title">Your Cart</div><div class="cart-cnt" id="cartCountText">0 items</div></div>
+    <button class="cart-cls" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty">
+      <div class="ce-icon-box"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>
+      Your cart is empty.<br>Add products to get started!
+    </div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-sub"><span class="cs-lbl">Subtotal</span><span class="cs-val" id="cartTotal">₱0</span></div>
+    <button class="cart-ckout" onclick="openCheckout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- CHECKOUT OVERLAY + MODAL -->
+<div class="ckout-ov" id="ckoutOverlay"></div>
+<div class="ckout-modal" id="ckoutModal">
+
+  <!-- Header -->
+  <div class="ckout-hdr">
+    <div class="ckout-hdr-left">
+      <div class="ckout-hdr-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" width="16" height="16">
+          <path d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/>
+          <path d="M9 12h6M9 16h4"/>
+        </svg>
+      </div>
+      <div>
+        <div class="ckout-title">Secure Your Booking</div>
+        <div class="ckout-sub">Complete your details to confirm your order</div>
+      </div>
+    </div>
+    <button class="ckout-cls" onclick="closeCheckout()">✕</button>
+  </div>
+
+  <!-- Steps -->
+  <div class="ckout-steps" id="ckoutSteps">
+    <div class="ck-step"><div class="ck-dot ck-active" id="ckd1">1</div><div class="ck-lbl ck-lbl-active" id="ckl1">Order Review</div></div>
+    <div class="ck-sep"></div>
+    <div class="ck-step"><div class="ck-dot ck-inactive" id="ckd2">2</div><div class="ck-lbl" id="ckl2">Your Details</div></div>
+    <div class="ck-sep"></div>
+    <div class="ck-step"><div class="ck-dot ck-inactive" id="ckd3">3</div><div class="ck-lbl" id="ckl3">Schedule</div></div>
+    <div class="ck-sep"></div>
+    <div class="ck-step"><div class="ck-dot ck-inactive" id="ckd4">4</div><div class="ck-lbl" id="ckl4">Terms &amp; Confirm</div></div>
+  </div>
+
+  <!-- Pages -->
+  <div class="ckout-body">
+
+    <!-- PG 1: Order Review -->
+    <div id="ckPg1" class="ck-page">
+      <div class="ck-sec-lbl">Items in your order</div>
+      <div class="ck-order-list" id="ckOrderList"></div>
+      <div class="ck-info-banner">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span><strong>Reservation fee required</strong> — A non-refundable fee secures your slot. Remaining balance is due at the branch on your appointment date.</span>
+      </div>
+    </div>
+
+    <!-- PG 2: Personal & Vehicle -->
+    <div id="ckPg2" class="ck-page ck-hidden">
+      <div class="ck-sec-lbl">Personal information</div>
+      <div class="ck-frow">
+        <div class="ck-fgroup"><label class="ck-label">First name <span class="ck-req">*</span></label><input type="text" id="ck_fname" class="ck-input" placeholder="Juan"></div>
+        <div class="ck-fgroup"><label class="ck-label">Last name <span class="ck-req">*</span></label><input type="text" id="ck_lname" class="ck-input" placeholder="dela Cruz"></div>
+      </div>
+      <div class="ck-frow">
+        <div class="ck-fgroup"><label class="ck-label">Mobile number <span class="ck-req">*</span></label><input type="tel" id="ck_mobile" class="ck-input" placeholder="+63 9XX XXX XXXX"></div>
+        <div class="ck-fgroup"><label class="ck-label">Email address <span class="ck-req">*</span></label><input type="email" id="ck_email" class="ck-input" placeholder="juan@email.com"></div>
+      </div>
+      <div class="ck-sec-lbl" style="margin-top:4px">Vehicle information</div>
+      <div class="ck-frow">
+        <div class="ck-fgroup"><label class="ck-label">Make &amp; Model <span class="ck-req">*</span></label><input type="text" id="ck_vehicle" class="ck-input" placeholder="e.g. Toyota Vios"></div>
+        <div class="ck-fgroup"><label class="ck-label">Plate number <span class="ck-req">*</span></label><input type="text" id="ck_plate" class="ck-input" placeholder="ABC 1234"></div>
+      </div>
+      <div class="ck-frow">
+        <div class="ck-fgroup"><label class="ck-label">Year <span class="ck-req">*</span></label><input type="number" id="ck_year" class="ck-input" placeholder="2020" min="2018" max="2026"></div>
+        <div class="ck-fgroup"><label class="ck-label">Fuel type</label>
+          <select id="ck_fuel" class="ck-input">
+            <option value="">Select fuel type</option>
+            <option>Gasoline</option><option>Diesel</option><option>Electric</option><option>Hybrid</option>
+          </select>
+        </div>
+      </div>
+      <div class="ck-frow ck-full">
+        <div class="ck-fgroup"><label class="ck-label">Special requests / notes</label>
+          <textarea id="ck_notes" class="ck-input ck-textarea" placeholder="Any concerns or requests for the technician..."></textarea>
+        </div>
+      </div>
+    </div>
+
+    <!-- PG 3: Branch & Schedule -->
+    <div id="ckPg3" class="ck-page ck-hidden">
+      <div class="ck-sec-lbl">Select branch <span class="ck-req">*</span></div>
+      <div class="ck-branch-grid">
+        <div class="ck-branch" onclick="ckSelectBranch(this,'Cebu – Mandaue')"><div class="ck-branch-name">Antique –</div><div class="ck-branch-addr">Rapidé San Jose de Buenavista</div></div>
+      </div>
+      <div class="ck-err ck-hidden" id="ckBranchErr">Please select a branch to continue.</div>
+      <div class="ck-frow" style="margin-top:12px">
+        <div class="ck-fgroup"><label class="ck-label">Preferred date <span class="ck-req">*</span></label><input type="date" id="ck_date" class="ck-input"></div>
+        <div class="ck-fgroup"><label class="ck-label">Preferred time <span class="ck-req">*</span></label>
+          <select id="ck_time" class="ck-input">
+            <option value="">Select time slot</option>
+            <option>8:00 AM</option><option>9:00 AM</option><option>10:00 AM</option>
+            <option>11:00 AM</option><option>1:00 PM</option><option>2:00 PM</option>
+            <option>3:00 PM</option><option>4:00 PM</option>
+          </select>
+        </div>
+      </div>
+      <div class="ck-info-banner" style="margin-top:8px">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14" style="flex-shrink:0;margin-top:2px"><circle cx="12" cy="12" r="10"/><path d="M12 8v4M12 16h.01"/></svg>
+        <span>Appointments are subject to branch availability. You will receive a confirmation message within 24 hours of booking.</span>
+      </div>
+    </div>
+
+    <!-- PG 4: Terms & Confirm -->
+    <div id="ckPg4" class="ck-page ck-hidden">
+      <div class="ck-sec-lbl">Booking policy &amp; terms</div>
+      <div class="ck-tnc-box">
+        <div class="ck-tnc-title">Website Booking Policy</div>
+        <div class="ck-tnc-item"><div class="ck-tnc-dot"></div><div><strong>Non-Refundable</strong> — All reservation fees are non-refundable.</div></div>
+        <div class="ck-tnc-item"><div class="ck-tnc-dot"></div><div><strong>Rescheduling</strong> — Must be made at least 24 hours prior to the appointment date and time.</div></div>
+        <div class="ck-tnc-item"><div class="ck-tnc-dot"></div><div><strong>No-Show Policy</strong> — If the customer fails to show up within 15 minutes of their scheduled booking without prior notice or branch notification, the booking will be considered forfeited and marked as No Show.</div></div>
+        <div class="ck-tnc-note">* All services include full safety inspection &amp; fluid top-ups, and for passenger sedan only. 2010 models and below. Surcharge may apply to vehicles over 4 cylinders. 4WD's, AUV's, SUV's and imported (American &amp; European) models.</div>
+        <div class="ck-tnc-note" style="border-top:none;padding-top:0;margin-top:4px">* Please note that prices and services may vary between our branches due to logistical factors, local promotions, and other considerations.</div>
+      </div>
+      <label class="ck-agree-row">
+        <input type="checkbox" id="ck_agree" class="ck-chk">
+        <span class="ck-agree-lbl"><strong>I have read and agree</strong> to the booking policy and terms above. I understand that my reservation fee is non-refundable and that failure to appear within 15 minutes of my scheduled time may result in forfeiture of my booking.</span>
+      </label>
+      <div class="ck-err ck-hidden" id="ckAgreeErr">Please accept the terms and conditions to proceed.</div>
+      <div class="ck-sec-lbl" style="margin-top:12px">Booking summary</div>
+      <div class="ck-summary-box">
+        <div class="ck-sum-row"><span class="ck-sum-lbl">Name</span><span id="ckSName">—</span></div>
+        <div class="ck-sum-row"><span class="ck-sum-lbl">Mobile</span><span id="ckSMobile">—</span></div>
+        <div class="ck-sum-row"><span class="ck-sum-lbl">Vehicle</span><span id="ckSVehicle">—</span></div>
+        <div class="ck-sum-row"><span class="ck-sum-lbl">Branch</span><span id="ckSBranch">—</span></div>
+        <div class="ck-sum-row"><span class="ck-sum-lbl">Appointment</span><span id="ckSAppt">—</span></div>
+        <div class="ck-sum-row ck-sum-total"><span class="ck-sum-lbl">Order Total</span><span id="ckSTotal">—</span></div>
+      </div>
+    </div>
+
+    <!-- PG 5: Success -->
+    <div id="ckPg5" class="ck-page ck-hidden ck-success-pg">
+      <div class="ck-success-icon">
+        <svg viewBox="0 0 24 24" fill="none" stroke="#1a7c4e" stroke-width="2.5" width="28" height="28"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <div class="ck-success-title">Booking Confirmed!</div>
+      <div class="ck-success-sub">Your reservation has been received. You will get a confirmation SMS and email within 24 hours. Please show this reference number at the branch.</div>
+      <div class="ck-ref-pill" id="ckRefCode">REF-000000</div>
+      <div style="font-size:12px;color:#999;margin-top:2px">Save this reference number for your records.</div>
+      <button class="ck-done-btn" onclick="closeCheckout()">Done</button>
+    </div>
+
+  </div><!-- /ckout-body -->
+
+  <!-- Footer -->
+  <div class="ckout-foot" id="ckoutFoot">
+    <button class="ck-btn-back ck-hidden" id="ckBackBtn" onclick="ckGoBack()">← Back</button>
+    <button class="ck-btn-next" id="ckNextBtn" onclick="ckGoNext()">Review Order →</button>
+  </div>
+
+</div><!-- /ckout-modal -->
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-dot"></div><div class="toast-text" id="toastText"></div></div>
+
+<!-- ═══════════════════════════════════════════════════
+     ALL JAVASCRIPT — placed at end of body so DOM exists
+     ═══════════════════════════════════════════════════ -->
+<script>
+/* ─────────────── CART STATE ─────────────── */
+var cart = []; // [{name, price, qty, sku, img}]
+
+/* ─────────────── ADD TO CART ─────────────── */
+function addToCart(btn, name, price, sku, img) {
+  var ex = cart.find(function(i){ return i.sku === sku; });
+  if (ex) {
+    ex.qty++;
+  } else {
+    cart.push({ name: name, price: price, qty: 1, sku: sku, img: img || '' });
+  }
+  updateCart();
+  openCart();
+  showToast('<strong>' + name + '</strong> added to cart!');
+
+  var orig = btn.textContent;
+  btn.textContent = '✓ Added';
+  btn.disabled = true;
+  btn.style.background = '#1a7c4e';
+  setTimeout(function(){ btn.textContent = orig; btn.disabled = false; btn.style.background = ''; }, 1200);
+}
+
+/* ─────────────── RENDER CART ─────────────── */
+function updateCart() {
+  var badge      = document.getElementById('cartBadge');
+  var countText  = document.getElementById('cartCountText');
+  var totalEl    = document.getElementById('cartTotal');
+  var itemsEl    = document.getElementById('cartItems');
+
+  var qty   = cart.reduce(function(a,i){ return a + i.qty; }, 0);
+  var total = cart.reduce(function(a,i){ return a + i.price * i.qty; }, 0);
+
+  badge.textContent = qty;
+  badge.classList.toggle('show', qty > 0);
+  countText.textContent = qty + ' item' + (qty !== 1 ? 's' : '');
+  totalEl.textContent   = '₱' + total.toLocaleString();
+
+  if (!cart.length) {
+    itemsEl.innerHTML =
+      '<div class="cart-empty">' +
+        '<div class="ce-icon-box"><svg viewBox="0 0 24 24" stroke="#888" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">' +
+        '<path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>' +
+        'Your cart is empty.<br>Add products to get started!</div>';
+    return;
+  }
+
+  itemsEl.innerHTML = cart.map(function(item, i) {
+    return '<div class="ci">' +
+      '<div class="ci-ico"><img src="' + item.img + '" alt="' + item.name + '" onerror="this.style.display=\'none\'"></div>' +
+      '<div class="ci-inf">' +
+        '<div class="ci-nm">' + item.name + '</div>' +
+        '<div class="ci-pr">₱' + (item.price * item.qty).toLocaleString() + '</div>' +
+        '<div class="ci-qty">' +
+          '<button class="qbtn" onclick="changeQty(' + i + ',-1)">−</button>' +
+          '<span class="qnum">' + item.qty + '</span>' +
+          '<button class="qbtn" onclick="changeQty(' + i + ',1)">+</button>' +
+        '</div>' +
+      '</div>' +
+      '<button class="ci-rm" onclick="removeItem(' + i + ')">✕</button>' +
+    '</div>';
+  }).join('');
+}
+
+function changeQty(i, d) {
+  cart[i].qty += d;
+  if (cart[i].qty <= 0) cart.splice(i, 1);
+  updateCart();
+}
+function removeItem(i) {
+  cart.splice(i, 1);
+  updateCart();
+}
+
+/* ─────────────── CART OPEN/CLOSE ─────────────── */
+function openCart() {
+  document.getElementById('cartOverlay').classList.add('open');
+  document.getElementById('cartDrawer').classList.add('open');
+  document.body.style.overflow = 'hidden';
+}
+function closeCart() {
+  document.getElementById('cartOverlay').classList.remove('open');
+  document.getElementById('cartDrawer').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('cartClose').addEventListener('click', closeCart);
+document.getElementById('cartOverlay').addEventListener('click', closeCart);
+document.getElementById('cartToggle').addEventListener('click', openCart);
+
+/* ─────────────── CHECKOUT ─────────────── */
+var ckCurStep = 1;
+var ckBranch  = '';
+
+function openCheckout() {
+  if (!cart.length) { showToast('Your cart is empty!'); return; }
+  closeCart();
+  ckReset();
+  ckPopulateOrder();
+  document.getElementById('ckoutOverlay').classList.add('open');
+  document.getElementById('ckoutModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  // Set minimum date to today
+  var today = new Date().toISOString().split('T')[0];
+  document.getElementById('ck_date').setAttribute('min', today);
+}
+
+function closeCheckout() {
+  document.getElementById('ckoutOverlay').classList.remove('open');
+  document.getElementById('ckoutModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('ckoutOverlay').addEventListener('click', closeCheckout);
+
+/* ─────────────── POPULATE ORDER LIST ─────────────── */
+function ckPopulateOrder() {
+  var box   = document.getElementById('ckOrderList');
+  var total = 0;
+  var html  = '';
+
+  cart.forEach(function(item) {
+    var lineTotal = item.price * item.qty;
+    total += lineTotal;
+    html +=
+      '<div class="ck-order-item">' +
+        '<div class="ck-order-icon"><img src="' + item.img + '" alt="' + item.name + '" onerror="this.style.display=\'none\'"></div>' +
+        '<div class="ck-order-info">' +
+          '<div class="ck-order-name">' + item.name + '</div>' +
+          '<div class="ck-order-sku">SKU: ' + item.sku + '</div>' +
+        '</div>' +
+        '<div class="ck-order-right">' +
+          '<div class="ck-order-qty">Qty: ' + item.qty + '</div>' +
+          '<div class="ck-order-price">₱' + lineTotal.toLocaleString() + '</div>' +
+        '</div>' +
+      '</div>';
+  });
+
+  html += '<div class="ck-order-total-row"><span>Order Total</span><span>₱' + total.toLocaleString() + '</span></div>';
+  box.innerHTML = html;
+  document.getElementById('ckSTotal').textContent = '₱' + total.toLocaleString();
+}
+
+/* ─────────────── STEP NAVIGATION ─────────────── */
+function ckSetStep(n) {
+  for (var i = 1; i <= 4; i++) {
+    var dot = document.getElementById('ckd' + i);
+    var lbl = document.getElementById('ckl' + i);
+    if (i < n) {
+      dot.className = 'ck-dot ck-done'; dot.textContent = '✓'; lbl.className = 'ck-lbl';
+    } else if (i === n) {
+      dot.className = 'ck-dot ck-active'; dot.textContent = i; lbl.className = 'ck-lbl ck-lbl-active';
+    } else {
+      dot.className = 'ck-dot ck-inactive'; dot.textContent = i; lbl.className = 'ck-lbl';
+    }
+  }
+
+  for (var j = 1; j <= 5; j++) {
+    var pg = document.getElementById('ckPg' + j);
+    if (pg) pg.classList.toggle('ck-hidden', j !== n);
+  }
+
+  var stepsBar = document.getElementById('ckoutSteps');
+  var foot     = document.getElementById('ckoutFoot');
+  var backBtn  = document.getElementById('ckBackBtn');
+  var nextBtn  = document.getElementById('ckNextBtn');
+
+  if (n === 5) {
+    stepsBar.style.display = 'none';
+    foot.style.display     = 'none';
+    return;
+  }
+  stepsBar.style.display = '';
+  foot.style.display     = '';
+  backBtn.classList.toggle('ck-hidden', n === 1);
+
+  var labels = { 1: 'Continue →', 2: 'Continue to Schedule →', 3: 'Review &amp; Confirm →', 4: 'Confirm Booking ✓' };
+  nextBtn.innerHTML         = labels[n] || 'Continue →';
+  nextBtn.style.background  = n === 4 ? '#1a7c4e' : '#1a3c5e';
+}
+
+function ckGoNext() {
+  if (ckCurStep === 1) {
+    ckCurStep = 2; ckSetStep(2);
+  } else if (ckCurStep === 2) {
+    if (!ckValidateDetails()) return;
+    ckCurStep = 3; ckSetStep(3);
+  } else if (ckCurStep === 3) {
+    if (!ckValidateSchedule()) return;
+    ckCurStep = 4; ckFillSummary(); ckSetStep(4);
+  } else if (ckCurStep === 4) {
+    if (!document.getElementById('ck_agree').checked) {
+      document.getElementById('ckAgreeErr').classList.remove('ck-hidden'); return;
+    }
+    document.getElementById('ckAgreeErr').classList.add('ck-hidden');
+    // Save to localStorage
+    var orders = JSON.parse(localStorage.getItem('rapide_orders') || '[]');
+    var total  = cart.reduce(function(a,i){ return a + i.price * i.qty; }, 0);
+    var ref    = 'REF-' + Math.floor(100000 + Math.random() * 900000);
+    orders.push({
+      id: ref, timestamp: Date.now(),
+      name: (document.getElementById('ck_fname').value + ' ' + document.getElementById('ck_lname').value).trim(),
+      email: document.getElementById('ck_email').value,
+      phone: document.getElementById('ck_mobile').value,
+      vehicle: document.getElementById('ck_vehicle').value + ' ' + document.getElementById('ck_plate').value,
+      branch: ckBranch,
+      appointment: document.getElementById('ck_date').value + ' ' + document.getElementById('ck_time').value,
+      items: cart.map(function(i){ return {name:i.name, price:i.price, qty:i.qty}; }),
+      total: total, status: 'pending'
+    });
+    localStorage.setItem('rapide_orders', JSON.stringify(orders));
+    document.getElementById('ckRefCode').textContent = ref;
+    cart = [];
+    updateCart();
+    ckCurStep = 5; ckSetStep(5);
+  }
+}
+
+function ckGoBack() {
+  if (ckCurStep > 1) { ckCurStep--; ckSetStep(ckCurStep); }
+}
+
+/* ─────────────── VALIDATION ─────────────── */
+function ckValidateDetails() {
+  var required = ['ck_fname','ck_lname','ck_mobile','ck_email','ck_vehicle','ck_plate','ck_year'];
+  var ok = true;
+  required.forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el.value.trim()) { el.classList.add('ck-error'); ok = false; }
+    else el.classList.remove('ck-error');
+  });
+  return ok;
+}
+function ckValidateSchedule() {
+  var ok = true;
+  if (!ckBranch) {
+    document.getElementById('ckBranchErr').classList.remove('ck-hidden'); ok = false;
+  } else {
+    document.getElementById('ckBranchErr').classList.add('ck-hidden');
+  }
+  ['ck_date','ck_time'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (!el.value) { el.classList.add('ck-error'); ok = false; }
+    else el.classList.remove('ck-error');
+  });
+  return ok;
+}
+
+/* ─────────────── BRANCH SELECTION ─────────────── */
+function ckSelectBranch(el, name) {
+  document.querySelectorAll('.ck-branch').forEach(function(b){ b.classList.remove('selected'); });
+  el.classList.add('selected');
+  ckBranch = name;
+  document.getElementById('ckBranchErr').classList.add('ck-hidden');
+}
+
+/* ─────────────── FILL SUMMARY ─────────────── */
+function ckFillSummary() {
+  var fname = document.getElementById('ck_fname').value.trim();
+  var lname = document.getElementById('ck_lname').value.trim();
+  document.getElementById('ckSName').textContent    = (fname + ' ' + lname).trim() || '—';
+  document.getElementById('ckSMobile').textContent  = document.getElementById('ck_mobile').value || '—';
+  document.getElementById('ckSVehicle').textContent = (document.getElementById('ck_vehicle').value + ' · ' + document.getElementById('ck_plate').value).trim() || '—';
+  document.getElementById('ckSBranch').textContent  = ckBranch || '—';
+  var d = document.getElementById('ck_date').value;
+  var t = document.getElementById('ck_time').value;
+  document.getElementById('ckSAppt').textContent = (d && t) ? d + ' at ' + t : '—';
+}
+
+/* ─────────────── RESET ─────────────── */
+function ckReset() {
+  ['ck_fname','ck_lname','ck_mobile','ck_email','ck_vehicle','ck_plate','ck_year','ck_notes'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.value = ''; el.classList.remove('ck-error'); }
+  });
+  ['ck_fuel','ck_time'].forEach(function(id) {
+    var el = document.getElementById(id);
+    if (el) { el.selectedIndex = 0; el.classList.remove('ck-error'); }
+  });
+  var dateEl = document.getElementById('ck_date');
+  if (dateEl) { dateEl.value = ''; dateEl.classList.remove('ck-error'); }
+  document.getElementById('ck_agree').checked = false;
+  document.querySelectorAll('.ck-branch').forEach(function(b){ b.classList.remove('selected'); });
+  document.getElementById('ckBranchErr').classList.add('ck-hidden');
+  document.getElementById('ckAgreeErr').classList.add('ck-hidden');
+  ckBranch  = '';
+  ckCurStep = 1;
+  ckSetStep(1);
+}
+
+/* ─────────────── BOOKING MODAL ─────────────── */
+function openBooking(svc) {
+  document.getElementById('bookingModal').classList.add('open');
+  document.body.style.overflow = 'hidden';
+  if (svc) {
+    var s = document.getElementById('modalService');
+    for (var o of s.options) if (o.text === svc) { s.value = o.value; break; }
+  }
+}
+function closeBooking() {
+  document.getElementById('bookingModal').classList.remove('open');
+  document.body.style.overflow = '';
+}
+document.getElementById('modalClose').addEventListener('click', closeBooking);
+document.getElementById('bookingModal').addEventListener('click', function(e){ if(e.target===e.currentTarget) closeBooking(); });
+document.getElementById('bookNowBtn').addEventListener('click', function(){ openBooking(); });
+document.getElementById('mobBookBtn').addEventListener('click', function(e){ e.preventDefault(); openBooking(); });
+
+function submitBooking() {
+  var name    = document.getElementById('bk_name').value.trim();
+  var phone   = document.getElementById('bk_phone').value.trim();
+  var service = document.getElementById('modalService').value;
+  if (!name || !phone || !service) { showToast('<strong>Please fill in required fields!</strong>'); return; }
+
+  var bookings = JSON.parse(localStorage.getItem('rapide_bookings') || '[]');
+  bookings.push({
+    id: 'BKG-' + Date.now().toString(36).toUpperCase(),
+    timestamp: Date.now(),
+    name: name,
+    email: document.getElementById('bk_email').value,
+    phone: phone,
+    service: service,
+    appointmentDate: document.getElementById('bk_date').value,
+    vehicle: document.getElementById('bk_vehicle').value,
+    message: document.getElementById('bk_notes').value,
+    status: 'pending'
+  });
+  localStorage.setItem('rapide_bookings', JSON.stringify(bookings));
+
+  showToast('<strong>Booking confirmed!</strong> We\'ll call you within 30 minutes.');
+  closeBooking();
+  ['bk_name','bk_phone','bk_email','bk_vehicle','bk_date','bk_notes'].forEach(function(id){
+    var el = document.getElementById(id); if(el) el.value = '';
+  });
+  document.getElementById('modalService').value = '';
+}
+
+/* ─────────────── NAV ─────────────── */
+var nav = document.getElementById('nav');
+window.addEventListener('scroll', function(){ nav.classList.toggle('scrolled', scrollY > 60); });
+var ham = document.getElementById('hamburger');
+var mob = document.getElementById('mobileMenu');
+ham.addEventListener('click', function(){ ham.classList.toggle('open'); mob.classList.toggle('open'); });
+mob.querySelectorAll('a').forEach(function(a){
+  a.addEventListener('click', function(){ ham.classList.remove('open'); mob.classList.remove('open'); });
+});
+
+/* ─────────────── FILTER TABS ─────────────── */
+document.querySelectorAll('.ftab').forEach(function(tab) {
+  tab.addEventListener('click', function() {
+    document.querySelectorAll('.ftab').forEach(function(t){ t.classList.remove('active'); });
+    this.classList.add('active');
+    var f = this.dataset.filter;
+    var cards = document.querySelectorAll('.prod-card');
+    var visible = 0;
+    cards.forEach(function(c) {
+      var hide = f !== 'all' && c.dataset.cat !== f;
+      c.classList.toggle('hidden', hide);
+      if (!hide) visible++;
+    });
+    document.getElementById('prodCount').textContent = 'Showing ' + visible + ' product' + (visible !== 1 ? 's' : '');
+  });
+});
+
+/* ─────────────── WISHLIST ─────────────── */
+function toggleWish(btn) {
+  var w = btn.classList.toggle('wished');
+  showToast(w ? '<strong>Added to wishlist!</strong>' : 'Removed from wishlist.');
+}
+
+/* ─────────────── TOAST ─────────────── */
+var toastTm;
+function showToast(text) {
+  var t = document.getElementById('toast');
+  document.getElementById('toastText').innerHTML = text;
+  t.classList.add('show');
+  clearTimeout(toastTm);
+  toastTm = setTimeout(function(){ t.classList.remove('show'); }, 3200);
+}
+
+/* ─────────────── COUNTDOWN TIMER ─────────────── */
+var endDate = new Date();
+endDate.setDate(endDate.getDate() + 12);
+endDate.setHours(endDate.getHours() + 8, endDate.getMinutes() + 34, endDate.getSeconds() + 22);
+function updateTimer() {
+  var diff = Math.max(0, Math.floor((endDate - new Date()) / 1000));
+  var d = Math.floor(diff / 86400); diff %= 86400;
+  var h = Math.floor(diff / 3600);  diff %= 3600;
+  var m = Math.floor(diff / 60);
+  var s = diff % 60;
+  document.getElementById('td').textContent = String(d).padStart(2,'0');
+  document.getElementById('th').textContent = String(h).padStart(2,'0');
+  document.getElementById('tm').textContent = String(m).padStart(2,'0');
+  document.getElementById('ts').textContent = String(s).padStart(2,'0');
+}
+updateTimer();
+setInterval(updateTimer, 1000);
+
+/* ─────────────── SCROLL REVEAL ─────────────── */
+var obs = new IntersectionObserver(function(entries) {
+  entries.forEach(function(e){ if (e.isIntersecting) e.target.classList.add('visible'); });
+}, { threshold: .08 });
+document.querySelectorAll('.reveal').forEach(function(el){ obs.observe(el); });
+
+/* ─────────────── REMOVE ck-input error on change ─────────────── */
+document.querySelectorAll('.ck-input').forEach(function(el) {
+  el.addEventListener('input',  function(){ el.classList.remove('ck-error'); });
+  el.addEventListener('change', function(){ el.classList.remove('ck-error'); });
+});
+</script>
+</body>
+</html>

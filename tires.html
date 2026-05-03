@@ -1,0 +1,898 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapide – Tires</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --amber:#FFD000;--red:#E30613;--dark:#1a1a1a;--mid:#444;--light:#888;
+    --smoke:#f8f8f8;--border:#e8e8e8;--white:#fff;--pink-bg:#fff5f5;
+    --green:#22c55e;--blue:#1a56db;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:'Barlow',sans-serif;background:#fff;color:var(--dark)}
+
+  /* ── HERO ── */
+  .hero{position:relative;min-height:420px;display:flex;align-items:center;overflow:hidden;background:#111}
+  .hero-bg{position:absolute;inset:0;background:url('https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=1400&auto=format&fit=crop') center/cover no-repeat;opacity:.45}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(100deg,rgba(0,0,0,.85) 45%,rgba(0,0,0,.2) 100%)}
+  .hero-content{position:relative;z-index:2;width:100%;max-width:1200px;margin:0 auto;padding:60px 32px;display:flex;align-items:center;gap:60px;flex-wrap:wrap}
+  .hero-text{flex:1;min-width:260px}
+  .hero-label{display:inline-block;background:var(--amber);color:var(--dark);font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:3px;padding:4px 12px;border-radius:4px;margin-bottom:14px}
+  .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(42px,6vw,72px);color:#fff;line-height:.95;letter-spacing:1px}
+  .hero-title span{color:var(--amber)}
+  .hero-sub{color:rgba(255,255,255,.65);font-size:15px;margin-top:14px;line-height:1.6;max-width:360px}
+
+  /* ── ESTIMATE CARD ── */
+  .est-card{background:#fff;border-radius:16px;padding:32px 28px;width:100%;max-width:480px;box-shadow:0 24px 60px rgba(0,0,0,.3)}
+  .est-card h3{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:1.5px;color:var(--dark);margin-bottom:20px}
+  .est-card h3 span{color:var(--red)}
+  .sel{width:100%;padding:13px 36px 13px 14px;border:1.5px solid var(--border);border-radius:10px;font-family:'Barlow',sans-serif;font-size:14px;font-weight:600;color:var(--dark);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 13px center;appearance:none;cursor:pointer;transition:border-color .2s;margin-bottom:12px}
+  .sel:focus{outline:none;border-color:var(--amber)}
+  .est-row{display:flex;gap:10px;margin-bottom:12px}
+  .est-row .sel{margin-bottom:0}
+  .fuel-toggle{display:flex;gap:8px;margin-bottom:18px}
+  .fuel-btn{flex:1;display:flex;flex-direction:column;align-items:center;padding:10px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;transition:all .2s;background:#fff}
+  .fuel-btn.active{border-color:var(--red);background:rgba(227,6,19,.05)}
+  .fuel-btn svg{width:22px;height:22px;margin-bottom:4px}
+  .fuel-btn span{font-size:11px;font-weight:700;letter-spacing:1px}
+  .fuel-btn.active span{color:var(--red)}
+  .est-btn{width:100%;padding:15px;background:var(--amber);border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:800;color:var(--dark);cursor:pointer;letter-spacing:.5px;transition:all .2s}
+  .est-btn:hover{background:#f0c200;transform:translateY(-1px)}
+
+  /* ── SEARCH SECTION ── */
+  .tire-section{background:var(--pink-bg);padding:56px 32px}
+  .tire-inner{max-width:800px;margin:0 auto;text-align:center}
+  .rating-bar{display:flex;align-items:center;justify-content:center;gap:10px;margin-bottom:26px}
+  .r-logo{width:36px;height:36px;border-radius:50%;background:#fff;border:2px solid var(--red);display:flex;align-items:center;justify-content:center}
+  .r-logo svg{width:20px;height:20px}
+  .stars{display:flex;gap:2px}
+  .star{color:#FFC107;font-size:19px}
+  .r-num{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--dark);letter-spacing:1px}
+  .r-sub{font-size:12px;color:var(--light);margin-top:3px;display:flex;align-items:center;gap:5px}
+  .vcheck{color:#2196F3;font-size:15px}
+  .stabs{display:flex;border:1.5px solid var(--border);border-radius:12px;overflow:hidden;margin-bottom:26px;background:#fff}
+  .stab{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:16px;gap:5px;cursor:pointer;font-size:14px;font-weight:700;color:var(--mid);border:none;background:transparent;transition:all .2s}
+  .stab.active{color:var(--red);border-bottom:3px solid var(--red)}
+  .stab:first-child{border-right:1.5px solid var(--border)}
+  .stab-icon{font-size:20px}
+  .sform{display:flex;gap:10px;margin-bottom:14px;flex-wrap:wrap}
+  .sform .sel{flex:1;min-width:140px;margin-bottom:0}
+  .sbtn{width:100%;padding:15px;background:var(--red);border:none;border-radius:10px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:800;color:#fff;cursor:pointer;margin-bottom:10px;transition:all .2s}
+  .sbtn:hover{background:#c0000f;transform:translateY(-1px)}
+  .guide-link{font-size:13px;color:var(--mid);text-decoration:underline;cursor:pointer;border:none;background:transparent;font-family:'Barlow',sans-serif}
+  .guide-link:hover{color:var(--red)}
+
+  /* ── RESULTS ── */
+  .results-wrap{display:none;background:#fff}
+  .results-layout{display:flex;max-width:1340px;margin:0 auto}
+
+  /* Sidebar */
+  .sidebar{width:280px;min-width:280px;border-right:1.5px solid var(--border);padding:24px 20px;position:sticky;top:0;height:fit-content;background:#fff}
+  .clr-btn{display:flex;align-items:center;gap:8px;border:1.5px solid var(--red);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:700;font-size:13px;color:var(--red);background:#fff;width:100%;margin-bottom:18px;transition:background .2s}
+  .clr-btn:hover{background:rgba(227,6,19,.05)}
+  .ftabs{display:flex;gap:8px;margin-bottom:20px}
+  .ftab{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;padding:10px 6px;border:1.5px solid var(--border);border-radius:10px;cursor:pointer;font-size:11px;font-weight:700;color:var(--mid);background:#fff;transition:all .2s;text-align:center}
+  .ftab.active{border-color:var(--red);background:rgba(227,6,19,.05);color:var(--red)}
+  .ftab-icon{font-size:18px}
+
+  /* Tire size diagram placeholder */
+  .diag-wrap{background:#ffffff;border-radius:12px;padding:14px;margin-bottom:18px;display:flex;align-items:center;justify-content:center;min-height:140px;overflow:hidden}
+  .diag-wrap img{display:block;width:100%;height:auto;object-fit:contain;max-height:180px;cursor:pointer}
+  /* shown when image is missing */
+  .diag-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;width:100%;height:140px;color:#aaa;font-size:12px;font-weight:700;letter-spacing:.5px;text-align:center;gap:8px}
+  .diag-placeholder svg{width:48px;height:48px;opacity:.4}
+
+  .fg{margin-bottom:14px}
+  .fl{font-size:11px;font-weight:700;letter-spacing:1px;color:var(--mid);text-transform:uppercase;margin-bottom:5px}
+  .fsel{width:100%;padding:10px 32px 10px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;color:var(--dark);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;cursor:pointer}
+  .fsel:focus{outline:none;border-color:var(--red)}
+  .fsbtn{width:100%;padding:12px;background:var(--red);border:none;border-radius:8px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:800;color:#fff;cursor:pointer;margin-top:2px;transition:all .2s}
+  .fsbtn:hover{background:#c0000f}
+  .htlink{font-size:11px;color:var(--mid);text-decoration:underline;cursor:pointer;border:none;background:transparent;font-family:'Barlow',sans-serif;margin-top:8px;display:block;text-align:center;width:100%}
+
+  /* Product area */
+  .prod-area{flex:1;padding:24px;min-width:0}
+  .res-hdr{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;flex-wrap:wrap;gap:10px}
+  .res-cnt{font-size:13px;color:var(--light)}
+  .res-cnt strong{color:var(--dark);font-weight:700}
+  .sort-sel{padding:9px 32px 9px 12px;border:1.5px solid var(--border);border-radius:8px;font-family:'Barlow',sans-serif;font-size:13px;font-weight:600;color:var(--dark);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23888' stroke-width='1.6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 10px center;appearance:none;cursor:pointer}
+
+  .pgrid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
+  @media(max-width:1080px){.pgrid{grid-template-columns:repeat(2,1fr)}}
+  @media(max-width:700px){.pgrid{grid-template-columns:1fr};.results-layout{flex-direction:column};.sidebar{width:100%;position:static}}
+
+  /* ── CARD ── */
+  .pcard{border:1.5px solid var(--border);border-radius:14px;overflow:hidden;background:#fff;transition:box-shadow .2s,transform .2s;position:relative}
+  .pcard:hover{box-shadow:0 6px 28px rgba(0,0,0,.1);transform:translateY(-2px)}
+  .pbadge{position:absolute;top:10px;left:10px;z-index:2;background:var(--red);color:#fff;font-family:'Bebas Neue',sans-serif;font-size:10px;letter-spacing:1px;padding:5px 8px;border-radius:7px;text-align:center;line-height:1.3;width:54px}
+  .pbadge small{font-size:8px;display:block;opacity:.85;font-family:'Barlow',sans-serif;font-weight:700;letter-spacing:0}
+
+  /* Tire image area — shows placeholder when no image */
+  .pimg{height:155px;display:flex;align-items:center;justify-content:center;background:#ffffff;padding:14px;position:relative}
+  .pimg img{max-height:125px;object-fit:contain;width:auto;display:block}
+  /* placeholder shown via JS when img fails or is empty */
+  .tire-placeholder{display:none;flex-direction:column;align-items:center;justify-content:center;width:100%;height:100%;color:#bbb;font-size:10px;font-weight:700;letter-spacing:1px;text-align:center;gap:6px;position:absolute;inset:0}
+  .tire-placeholder svg{width:54px;height:54px;opacity:.35}
+
+  .pbody{padding:13px}
+  .brow{display:flex;align-items:center;justify-content:space-between;margin-bottom:7px}
+  .bname{font-family:'Bebas Neue',sans-serif;font-size:15px;letter-spacing:2px}
+  .bname.wl{color:#1a6e2e}
+  .bname.fw{color:#c0392b}
+  .bname.gy{color:#003087}
+  .bname.bs{color:#cc0000}
+  .bname.mc{color:#009640}
+  .bname.yk{color:#0060a9}
+  .bname.mx{color:#e30613}
+  .bname.nx{color:#1a1a1a}
+  .instock{display:flex;align-items:center;gap:3px;font-size:10px;font-weight:700;color:var(--green)}
+  .sdot{width:6px;height:6px;border-radius:50%;background:var(--green)}
+  .dyear{font-size:10px;font-weight:600;color:var(--light);margin-left:3px}
+  .pname{font-size:12px;font-weight:700;color:var(--dark);margin-bottom:4px;line-height:1.35}
+  .rmini{display:flex;align-items:center;gap:5px;margin-bottom:9px}
+  .smini{display:flex;gap:1px}
+  .starm{font-size:11px}
+  .sold-b{display:flex;align-items:center;gap:3px;font-size:10px;color:var(--mid);font-weight:600}
+  .price{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--dark);letter-spacing:.5px;margin-bottom:2px}
+  .bnote{font-size:10px;color:var(--red);font-weight:700;margin-bottom:7px}
+  .warrow{display:flex;align-items:center;gap:10px;font-size:10px;color:var(--mid);margin-bottom:10px}
+  .warrow svg{width:12px;height:12px;flex-shrink:0}
+  .cactions{display:flex;gap:7px}
+  .bpromo{flex:1;padding:9px 6px;border:1.5px solid var(--red);border-radius:7px;font-family:'Barlow',sans-serif;font-size:11px;font-weight:800;color:var(--red);background:#fff;cursor:pointer;transition:all .2s;white-space:nowrap}
+  .bpromo:hover{background:rgba(227,6,19,.06)}
+  .bbuy{flex:2;padding:9px 6px;border:none;border-radius:7px;font-family:'Barlow',sans-serif;font-size:11px;font-weight:800;color:#fff;background:var(--blue);cursor:pointer;transition:all .2s;white-space:nowrap}
+  .bbuy:hover{background:#1144bb}
+  .cfoot{padding:9px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:3px}
+  .flink{font-size:10px;color:var(--mid);cursor:pointer;display:flex;align-items:center;gap:4px;background:none;border:none;font-family:'Barlow',sans-serif;text-align:left;padding:0;transition:color .2s}
+  .flink:hover{color:var(--red)}
+  .flink svg{width:11px;height:11px;flex-shrink:0}
+
+  /* ── GUIDE MODAL ── */
+  .ov{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:20px}
+  .ov.open{opacity:1;pointer-events:all}
+  .gmodal{background:var(--pink-bg);border-radius:20px;max-width:680px;width:100%;padding:36px;position:relative;transform:translateY(20px);transition:transform .3s;max-height:90vh;overflow-y:auto}
+  .ov.open .gmodal{transform:translateY(0)}
+  .xbtn{position:absolute;top:14px;right:14px;background:none;border:none;font-size:20px;cursor:pointer;color:var(--mid);width:30px;height:30px;display:flex;align-items:center;justify-content:center;border-radius:50%}
+  .xbtn:hover{background:rgba(0,0,0,.08)}
+
+  /* Guide diagram placeholder */
+  .guide-diag{display:block;margin:0 auto;max-width:100%;border-radius:10px}
+  .guide-diag-placeholder{display:flex;flex-direction:column;align-items:center;justify-content:center;background:#f0f0f0;border-radius:10px;height:200px;color:#aaa;font-size:13px;font-weight:700;letter-spacing:.5px;gap:10px}
+  .guide-diag-placeholder svg{width:56px;height:56px;opacity:.4}
+
+  /* ── BUNDLE MODAL ── */
+  .bmodal{background:#fff;border-radius:20px;width:100%;max-width:480px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.25);transform:translateY(20px);transition:transform .3s}
+  .ov.open .bmodal{transform:translateY(0)}
+  .bmhdr{background:var(--pink-bg);padding:22px 26px 18px;border-bottom:1.5px solid var(--border);text-align:center;position:relative}
+  .bmhdr h2{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--red)}
+  .bmsub{font-size:15px;font-weight:700;color:var(--dark);margin-top:3px}
+  .bmsub strong{color:var(--red)}
+  .bmtire{font-size:12px;color:var(--mid);font-weight:600;margin-top:3px;letter-spacing:.4px}
+  .bmbody{padding:22px 26px}
+  .single-opt{display:flex;align-items:center;gap:10px;padding:13px 14px;border:2px solid var(--red);border-radius:11px;margin-bottom:14px;background:rgba(227,6,19,.04)}
+  .ro{width:18px;height:18px;border-radius:50%;border:2px solid var(--red);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .ri{width:7px;height:7px;border-radius:50%;background:var(--red)}
+  .slabel{font-size:14px;font-weight:700;color:var(--dark)}
+  .sprice{font-size:13px;font-weight:600;color:var(--mid);margin-left:auto}
+  .bchoose{font-size:11px;font-weight:700;color:var(--mid);letter-spacing:.5px;text-transform:uppercase;margin-bottom:10px}
+  .bopts{display:flex;flex-direction:column;gap:8px;margin-bottom:18px}
+  .bopt{display:flex;align-items:center;gap:10px;padding:13px 14px;border:1.5px solid var(--border);border-radius:11px;cursor:pointer;transition:all .2s;background:#fff}
+  .bopt:hover,.bopt.sel{border-color:var(--dark);background:#fafafa}
+  .re{width:18px;height:18px;border-radius:50%;border:2px solid #ccc;flex-shrink:0;display:flex;align-items:center;justify-content:center;transition:border-color .2s}
+  .bopt.sel .re{border-color:var(--dark)}
+  .rf{width:7px;height:7px;border-radius:50%;background:var(--dark);display:none}
+  .bopt.sel .rf{display:block}
+  .olabel{font-size:14px;font-weight:700;color:var(--dark)}
+  .oprice{font-size:12px;font-weight:600;color:var(--mid);margin-left:auto}
+  .totalrow{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-top:1.5px solid var(--border);margin-bottom:14px}
+  .tlabel{font-size:15px;font-weight:700;color:var(--dark)}
+  .tprice{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--light);letter-spacing:1px}
+  .acbtn{width:100%;padding:16px;background:var(--red);border:none;border-radius:11px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:800;color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;transition:all .2s}
+  .acbtn:hover{background:#c0000f;transform:translateY(-1px);box-shadow:0 8px 22px rgba(227,6,19,.3)}
+  .acbtn svg{width:18px;height:18px}
+
+  /* ── CHECKOUT MODAL ── */
+  .comodal{background:#fff;border-radius:20px;width:100%;max-width:400px;overflow:hidden;box-shadow:0 32px 80px rgba(0,0,0,.25);transform:translateY(20px);transition:transform .3s;max-height:90vh;display:flex;flex-direction:column}
+  .ov.open .comodal{transform:translateY(0)}
+  .cohdr{padding:18px 18px 14px;border-bottom:1.5px solid var(--border);display:flex;align-items:center;gap:10px;flex-shrink:0}
+  .bbk{background:none;border:none;cursor:pointer;font-size:20px;color:var(--mid);padding:0;line-height:1}
+  .cotitle{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1px;color:var(--dark)}
+  .cobody{padding:18px;overflow-y:auto;flex:1}
+  .alabel{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);margin-bottom:6px}
+  .asel{width:100%;padding:13px 32px 13px 14px;border:1.5px solid var(--border);border-radius:11px;font-family:'Barlow',sans-serif;font-size:15px;font-weight:600;color:var(--dark);background:#fff url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23888' stroke-width='1.8' fill='none' stroke-linecap='round'/%3E%3C/svg%3E") no-repeat right 12px center;appearance:none;cursor:pointer;margin-bottom:18px}
+  .asel:focus{outline:none;border-color:var(--red)}
+  .plabel{font-size:10px;font-weight:700;letter-spacing:1.5px;text-transform:uppercase;color:var(--mid);margin-bottom:10px}
+  .pscroll{display:flex;gap:12px;overflow-x:auto;padding-bottom:6px;scrollbar-width:none}
+  .pscroll::-webkit-scrollbar{display:none}
+  .pcard2{min-width:200px;border:1.5px solid var(--border);border-radius:13px;overflow:hidden;cursor:pointer;transition:all .2s;flex-shrink:0}
+  .pcard2.sel{border-color:var(--red);box-shadow:0 0 0 3px rgba(227,6,19,.1)}
+  .pcard2:hover{border-color:var(--red)}
+  .pthumb{height:110px;display:flex;align-items:center;justify-content:center}
+  .pinfo2{padding:11px}
+  .pname2{font-family:'Bebas Neue',sans-serif;font-size:13px;letter-spacing:1px;color:var(--dark);margin-bottom:2px}
+  .paddr{font-size:10px;color:var(--mid);line-height:1.4;margin-bottom:7px}
+  .pavail-tag{background:#f0f0f0;color:var(--mid);font-size:9px;font-weight:700;letter-spacing:.8px;padding:2px 6px;border-radius:3px;text-transform:uppercase;display:inline-block;margin-bottom:4px}
+  .pavail-time{font-size:11px;font-weight:700;color:var(--dark);margin-bottom:8px}
+  .cdbtn{width:100%;padding:8px;border:1.5px solid var(--red);border-radius:7px;font-family:'Barlow',sans-serif;font-size:11px;font-weight:800;color:var(--red);background:#fff;cursor:pointer;transition:background .2s}
+  .cdbtn:hover{background:rgba(227,6,19,.06)}
+  .cobar{background:var(--red);padding:14px 18px;display:flex;align-items:center;justify-content:space-between;cursor:pointer;transition:background .2s;border:none;width:100%;flex-shrink:0}
+  .cobar:hover{background:#c0000f}
+  .colock{display:flex;align-items:center;gap:7px;color:#fff;font-size:15px;font-weight:800}
+  .colock svg{width:16px;height:16px}
+  .coamt{font-family:'Bebas Neue',sans-serif;font-size:20px;color:#fff;letter-spacing:1px}
+  .cosave{font-size:10px;color:rgba(255,255,255,.8);text-align:right}
+</style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════════
+     HERO
+══════════════════════════════════════════════ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <div class="hero-text">
+      <div class="hero-label">RAPIDE AUTO SERVICE</div>
+      <h1 class="hero-title">TIRES<br><span></span></h1>
+      <p class="hero-sub">Top-brand tires and installments by certified technicians. Fast, reliable, and backed by Rapide's trusted service.</p>
+    </div>
+    <div class="est-card">
+      <h3>Get <span>FREE</span> Estimate for your Tire Service</h3>
+      <select class="sel">
+        <option>Rapide San Jose, Antique</option>
+        <option>Rapide Iloilo</option>
+      </select>
+      <div class="est-row">
+        <select class="sel">
+          <option disabled selected>Select Car model</option>
+          <option>Toyota Vios</option>
+          <option>Toyota Fortuner</option>
+          <option>Honda City</option>
+          <option>Mitsubishi Montero</option>
+          <option>Ford Ranger</option>
+        </select>
+        <select class="sel" style="max-width:130px">
+          <option disabled selected>Year</option>
+          <option>2026</option><option>2025</option><option>2024</option>
+          <option>2023</option><option>2022</option><option>2021</option><option>2020</option>
+        </select>
+      </div>
+      <div class="fuel-toggle">
+        <button class="fuel-btn" onclick="setFuel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M3 22V6a2 2 0 012-2h8a2 2 0 012 2v16"/><path d="M3 11h12"/><path d="M17 6l3 3-3 3"/><path d="M20 9v6a2 2 0 01-2 2"/></svg>
+          <span>GAS</span>
+        </button>
+        <button class="fuel-btn active" onclick="setFuel(this)">
+          <svg viewBox="0 0 24 24" fill="none" stroke="#E30613" stroke-width="1.8" stroke-linecap="round"><path d="M3 22V6a2 2 0 012-2h8a2 2 0 012 2v16"/><path d="M3 11h12"/><path d="M17 6l3 3-3 3"/><path d="M20 9v6a2 2 0 01-2 2"/></svg>
+          <span>DIESEL</span>
+        </button>
+      </div>
+      <button class="est-btn">» Get Free Estimate «</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     TIRE SEARCH
+══════════════════════════════════════════════ -->
+<section class="tire-section">
+  <div class="tire-inner">
+    <div class="rating-bar">
+      <div class="r-logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#E30613"/>
+          <circle cx="12" cy="12" r="5" fill="#fff"/>
+          <circle cx="12" cy="12" r="2" fill="#E30613"/>
+        </svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:7px">
+          <div class="stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+          <span class="r-num">4.8</span>
+        </div>
+        <div class="r-sub">Rated by 1,470 verified customers <span class="vcheck">✔</span></div>
+      </div>
+    </div>
+
+    <div class="stabs">
+      <button class="stab active" onclick="setTab(this,'size')"><span class="stab-icon">🛞</span>Tire Size Search</button>
+      <button class="stab" onclick="setTab(this,'model')"><span class="stab-icon">🚙</span>Car Model Search</button>
+    </div>
+
+    <!-- Search by Size -->
+    <div id="form-size">
+      <div class="sform">
+        <select class="sel" id="sw">
+          <option disabled selected>Width</option>
+          <option>155</option><option>165</option><option>175</option><option>185</option>
+          <option>195</option><option>205</option><option>215</option><option>225</option>
+          <option>235</option><option>245</option>
+        </select>
+        <select class="sel" id="sa">
+          <option disabled selected>Aspect Ratio</option>
+          <option>45</option><option>50</option><option>55</option><option>60</option>
+          <option>65</option><option>70</option><option>75</option>
+        </select>
+        <select class="sel" id="sr">
+          <option disabled selected>Rim Diameter</option>
+          <option>13</option><option>14</option><option>15</option><option>16</option>
+          <option>17</option><option>18</option><option>19</option><option>20</option>
+        </select>
+      </div>
+      <button class="sbtn" onclick="doSearch()">Search for Tires</button>
+      <button class="guide-link" onclick="openGuide()">How to read tire size?</button>
+    </div>
+
+    <!-- Search by Model -->
+    <div id="form-model" style="display:none">
+      <div class="sform">
+        <select class="sel">
+          <option disabled selected>Select Brand</option>
+          <option>Toyota</option><option>Honda</option><option>Mitsubishi</option>
+          <option>Isuzu</option><option>Ford</option>
+        </select>
+        <select class="sel">
+          <option disabled selected>Select Model</option>
+          <option>Vios</option><option>Fortuner</option><option>City</option>
+          <option>Montero</option><option>Ranger</option>
+        </select>
+        <select class="sel">
+          <option disabled selected>Year</option>
+          <option>2026</option><option>2025</option><option>2024</option>
+          <option>2023</option><option>2022</option>
+        </select>
+      </div>
+      <button class="sbtn" onclick="doSearch()">Search for Tires</button>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════════
+     RESULTS
+══════════════════════════════════════════════ -->
+<div class="results-wrap" id="resultsWrap">
+  <div class="results-layout">
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <button class="clr-btn" onclick="clearResults()">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+        Clear All Filter
+      </button>
+      <div class="ftabs">
+        <button class="ftab active" onclick="setFtab(this,'size')"><span class="ftab-icon">🛞</span><span>Search By<br>Tire Size</span></button>
+        <button class="ftab" onclick="setFtab(this,'model')"><span class="ftab-icon">🚙</span><span>Search By<br>Car Model</span></button>
+      </div>
+
+      <!-- Tire Size Diagram -->
+      <div class="diag-wrap" id="diagWrap">
+        <!--
+          ┌─────────────────────────────────────┐
+          │  REPLACE the src below with your    │
+          │  tire-size diagram image path, e.g. │
+          │  src="images/tireSize.webp"         │
+          └─────────────────────────────────────┘
+        -->
+        <img
+          id="diagImg"
+          src="../images/tireSize.webp" 
+          alt=""
+          style="display:block;width:100%;height:auto;object-fit:contain;max-height:180px;cursor:pointer;"
+          onerror="showDiagPlaceholder()"
+          onload="this.style.display='block'"
+        >
+        <!-- fallback shown when src is empty or broken -->
+        <div class="diag-placeholder" id="diagPlaceholder">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><line x1="12" y1="3" x2="12" y2="1"/><line x1="12" y1="23" x2="12" y2="21"/><line x1="3" y1="12" x2="1" y2="12"/><line x1="23" y1="12" x2="21" y2="12"/></svg>
+          <br><span style="font-size:9px;font-weight:400;opacity:.7"></span>
+        </div>
+      </div>
+
+      <div id="tireLbl" style="text-align:center;font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:2px;color:var(--dark);font-weight:700;margin-top:8px;padding:8px;background:rgba(227,6,19,.08);border-radius:8px"></div>
+
+      <!-- Sidebar: Filter by Size -->
+      <div id="sb-size">
+        <div class="fg"><div class="fl">Width</div>
+          <select class="fsel" id="fw">
+            <option>155</option><option>165</option><option>175</option><option selected>185</option>
+            <option>195</option><option>205</option><option>215</option><option>225</option>
+            <option>235</option><option>245</option>
+          </select>
+        </div>
+        <div class="fg"><div class="fl">Aspect Ratio</div>
+          <select class="fsel" id="fa">
+            <option>45</option><option>50</option><option>55</option><option selected>60</option>
+            <option>65</option><option>70</option><option>75</option>
+          </select>
+        </div>
+        <div class="fg"><div class="fl">Rim Diameter</div>
+          <select class="fsel" id="fr">
+            <option>13</option><option>14</option><option selected>15</option><option>16</option>
+            <option>17</option><option>18</option><option>19</option><option>20</option>
+          </select>
+        </div>
+        <button class="fsbtn" onclick="doSearch()">Search for Tires</button>
+        <button class="htlink" onclick="openGuide()">How to read tire size?</button>
+      </div>
+
+      <!-- Sidebar: Filter by Model -->
+      <div id="sb-model" style="display:none">
+        <div class="fg"><div class="fl">Brand</div>
+          <select class="fsel"><option>Toyota</option><option>Honda</option><option>Mitsubishi</option></select>
+        </div>
+        <div class="fg"><div class="fl">Model</div>
+          <select class="fsel"><option>Vios</option><option>Fortuner</option><option>City</option></select>
+        </div>
+        <div class="fg"><div class="fl">Year</div>
+          <select class="fsel"><option>2024</option><option>2023</option><option>2022</option></select>
+        </div>
+        <button class="fsbtn" onclick="doSearch()">Search for Tires</button>
+      </div>
+    </aside>
+
+    <!-- Product Grid -->
+    <div class="prod-area">
+      <div class="res-hdr">
+        <div class="res-cnt">1 to <strong id="resCnt">0</strong> results</div>
+        <select class="sort-sel">
+          <option>Sort Default</option>
+          <option>Price: Low to High</option>
+          <option>Price: High to Low</option>
+          <option>Best Rated</option>
+          <option>Most Sold</option>
+        </select>
+      </div>
+      <div class="pgrid" id="pgrid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     GUIDE MODAL
+══════════════════════════════════════════════ -->
+<div class="ov" id="guideOv" onclick="closeOvOut(event,'guideOv')">
+  <div class="gmodal">
+    <button class="xbtn" onclick="closeOv('guideOv')">✕</button>
+    <div class="rating-bar" style="justify-content:flex-start;margin-bottom:14px">
+      <div class="r-logo">
+        <svg viewBox="0 0 24 24" fill="none">
+          <circle cx="12" cy="12" r="10" fill="#E30613"/>
+          <circle cx="12" cy="12" r="5" fill="#fff"/>
+          <circle cx="12" cy="12" r="2" fill="#E30613"/>
+        </svg>
+      </div>
+      <div>
+        <div style="display:flex;align-items:center;gap:6px">
+          <div class="stars"><span class="star" style="font-size:15px">★</span><span class="star" style="font-size:15px">★</span><span class="star" style="font-size:15px">★</span><span class="star" style="font-size:15px">★</span><span class="star" style="font-size:15px">★</span></div>
+          <span class="r-num" style="font-size:20px">4.8</span>
+        </div>
+        <div class="r-sub">Rated by 1,470 verified customers <span class="vcheck">✔</span></div>
+      </div>
+    </div>
+    <h2 style="font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:1px;margin-bottom:5px">How to Read <span style="color:var(--red)">Tire Size?</span></h2>
+    <p style="font-size:12px;color:var(--light);margin-bottom:18px">Find your tire size on the sidewall. It looks like: <strong>185 / 60 R15</strong></p>
+
+    <!--
+      ┌─────────────────────────────────────────┐
+      │  REPLACE src below with your tire-size  │
+      │  guide image, e.g. src="images/tireSize.webp"  │
+      └─────────────────────────────────────────┘
+    -->
+    <img
+      src=""
+      alt="How to read tire size"
+      class="guide-diag"
+      onerror="this.style.display='none';document.getElementById('guidePlaceholder').style.display='flex'"
+      onload="document.getElementById('guidePlaceholder').style.display='none';this.style.display='block'"
+    >
+    <div class="guide-diag-placeholder" id="guidePlaceholder">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M3 9h18M9 21V9"/></svg>
+      Tire size diagram image<br><span style="font-size:10px;font-weight:400">Set src="your-image-path" in HTML</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     BUNDLE MODAL
+══════════════════════════════════════════════ -->
+<div class="ov" id="bundleOv" onclick="closeOvOut(event,'bundleOv')">
+  <div class="bmodal">
+    <div class="bmhdr">
+      <button class="xbtn" onclick="closeOv('bundleOv')">✕</button>
+      <h2>BUNDLE PROMO!</h2>
+      <div class="bmsub">Buy 4 Tires for only <strong id="b4price">₱0.00/TIRE</strong></div>
+      <div class="bmtire" id="btirename"></div>
+    </div>
+    <div class="bmbody">
+      <div class="single-opt">
+        <div class="ro"><div class="ri"></div></div>
+        <span class="slabel">Buy 1 Tire</span>
+        <span class="sprice" id="s1p">₱0.00 /Tire</span>
+      </div>
+      <p class="bchoose">Choose your Bundle Promo</p>
+      <div class="bopts">
+        <div class="bopt" onclick="selBundle(this,4)" data-qty="4">
+          <div class="re"><div class="rf"></div></div><span class="olabel">Buy 4 Tires</span><span class="oprice" id="op4">—</span>
+        </div>
+        <div class="bopt" onclick="selBundle(this,3)" data-qty="3">
+          <div class="re"><div class="rf"></div></div><span class="olabel">Buy 3 Tires</span><span class="oprice" id="op3">—</span>
+        </div>
+        <div class="bopt" onclick="selBundle(this,2)" data-qty="2">
+          <div class="re"><div class="rf"></div></div><span class="olabel">Buy 2 Tires</span><span class="oprice" id="op2">—</span>
+        </div>
+      </div>
+      <div class="totalrow">
+        <span class="tlabel">Total:</span>
+        <span class="tprice" id="btotal">₱0.00</span>
+      </div>
+      <button class="acbtn" onclick="openCheckout()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 001.99 1.61h9.72a2 2 0 001.99-1.61L23 6H6"/></svg>
+        ADD TO CART
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════
+     CHECKOUT MODAL
+══════════════════════════════════════════════ -->
+<div class="ov" id="coOv" onclick="closeOvOut(event,'coOv')">
+  <div class="comodal">
+    <div class="cohdr">
+      <button class="bbk" onclick="backBundle()">←</button>
+      <span class="cotitle">SELECT INSTALLATION SITE</span>
+      <button class="xbtn" style="position:static;margin-left:auto" onclick="closeOv('coOv')">✕</button>
+    </div>
+    <div class="cobody">
+      <p class="alabel">Select Area</p>
+      <select class="asel" onchange="loadPartners(this.value)">
+        <option>San Jose</option>
+      </select>
+      <p class="plabel">Select Installation Partner</p>
+      <div class="pscroll" id="pscroll"></div>
+    </div>
+    <button class="cobar" onclick="doCheckout()">
+      <span class="colock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0110 0v4"/></svg>
+        Checkout
+      </span>
+      <div>
+        <div class="coamt" id="coamt">₱0.00</div>
+        <div class="cosave" id="cosave"></div>
+      </div>
+    </button>
+  </div>
+</div>
+
+<script>
+/* ════════════════════════════════════════════════════════════════
+   TIRE DATA
+   ─────────────────────────────────────────────────────────────
+   For each tire, set the `img` property to your image path.
+
+   Examples:
+     img: 'images/tires/goodyear-assurance.png'   ← relative path
+     img: 'https://yoursite.com/tire.jpg'          ← full URL
+     img: ''                                        ← leave blank → shows placeholder
+
+   The placeholder is shown automatically when the image is missing
+   or the path is wrong — no errors, no broken icons.
+════════════════════════════════════════════════════════════════ */
+const TIRES = [
+  {
+    brand: 'WESTLAKE', cls: 'wl',
+    model: '155/R12C H550',
+    price: 1658.70, rating: 5, sold: 12, war: '1 yr', dot: '2025',
+    img: '../images/tire1.webp'   // ← put your image path here, e.g. 'images/tire1.png'
+  },
+  {
+    brand: 'WESTLAKE', cls: 'wl',
+    model: '155/65/R13 RP26',
+    price: 1716.90, rating: 5, sold: 8, war: '1 yr', dot: '2025',
+    img: '../images/tire2.webp'   // ← put your image path here
+  },
+  {
+    brand: 'FRONWAY', cls: 'fw',
+    model: '155/70/R13 ECOGREEN 75T',
+    price: 1760.55, rating: 4.8, sold: 15, war: '5 yrs', dot: '2025',
+    img: '../images/tire3.webp'   // ← put your image path here
+  },
+  {
+    brand: 'GOODYEAR', cls: 'gy',
+    model: '185/60/R15 ASSURANCE',
+    price: 2000.00, rating: 4.9, sold: 34, war: '3 yrs', dot: '2025',
+    img: '../images/tire4.webp'   // ← put your image path here
+  },
+  {
+    brand: 'BRIDGESTONE', cls: 'bs',
+    model: '195/65/R15 ECOPIA EP150',
+    price: 2380.00, rating: 4.7, sold: 22, war: '3 yrs', dot: '2025',
+    img: '../images/tire5.webp'   // ← put your image path here
+  },
+  {
+    brand: 'MICHELIN', cls: 'mc',
+    model: '205/55/R16 PRIMACY 4',
+    price: 3100.00, rating: 5, sold: 41, war: '5 yrs', dot: '2025',
+    img: '../images/tire6.webp'   // ← put your image path here
+  },
+  {
+    brand: 'YOKOHAMA', cls: 'yk',
+    model: '215/60/R16 EARTH-1',
+    price: 2650.00, rating: 4.6, sold: 18, war: '2 yrs', dot: '2025',
+    img: '../images/tire7.webp'   // ← put your image path here
+  },
+  {
+    brand: 'MAXXIS', cls: 'mx',
+    model: '175/70/R14 MA-P1',
+    price: 1890.00, rating: 4.5, sold: 29, war: '1 yr', dot: '2025',
+    img: '../images/tire8.webp'   // ← put your image path here
+  },
+  {
+    brand: 'NEXEN', cls: 'nx',
+    model: '225/45/R18 N-FERA SU1',
+    price: 2950.00, rating: 4.8, sold: 11, war: '3 yrs', dot: '2025',
+    img: '../images/tire9.webp'   // ← put your image path here
+  },
+];
+
+/* ════════════════════════════════════════════════════════════════
+   INSTALLATION PARTNERS
+   ─────────────────────────────────────────────────────────────
+   Add more areas and partners as needed.
+════════════════════════════════════════════════════════════════ */
+const PARTNERS = {
+  'San Jose': [
+    {
+      name: 'RAPIDE SAN JOSE',
+      addr: 'San Jose, Antique, 5700',
+      avail: 'Monday 04/06/2026 · Afternoon',
+      color: 'linear-gradient(135deg,#E30613,#ff6b6b)'
+    },
+  ],
+
+};
+
+/* ════════════════════════════════════════════════════════════════
+   HELPERS
+════════════════════════════════════════════════════════════════ */
+let curTire = null, selQty = 1;
+
+function fmt(n) {
+  return n.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+}
+
+/* Tire-image placeholder: SVG wheel icon rendered via canvas-free inline SVG */
+function tirePlaceholderSVG(brand) {
+  return `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;
+                width:100%;height:125px;color:#ccc;gap:6px;font-size:10px;font-weight:700;letter-spacing:.8px;text-align:center">
+      <svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="32" cy="32" r="30" stroke="#ddd" stroke-width="3"/>
+        <circle cx="32" cy="32" r="18" stroke="#ddd" stroke-width="2.5"/>
+        <circle cx="32" cy="32" r="6"  fill="#eee"/>
+        <line x1="32" y1="14" x2="32" y2="26" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="32" y1="38" x2="32" y2="50" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="14" y1="32" x2="26" y2="32" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="38" y1="32" x2="50" y2="32" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="18.7" y1="18.7" x2="27.3" y2="27.3" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="36.7" y1="36.7" x2="45.3" y2="45.3" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="45.3" y1="18.7" x2="36.7" y2="27.3" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+        <line x1="27.3" y1="36.7" x2="18.7" y2="45.3" stroke="#ddd" stroke-width="2" stroke-linecap="round"/>
+      </svg>
+      NO IMAGE
+    </div>`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   RENDER PRODUCTS
+════════════════════════════════════════════════════════════════ */
+function renderProducts() {
+  const g = document.getElementById('pgrid');
+  document.getElementById('resCnt').textContent = TIRES.length;
+
+  g.innerHTML = TIRES.map((t, i) => {
+    const p = t.price;
+    const stars = [...Array(5)].map((_, j) =>
+      `<span class="starm" style="color:${j < Math.round(t.rating) ? '#FFC107' : '#ddd'}">★</span>`
+    ).join('');
+
+    /* Image section: shows img if src set, placeholder if not */
+    const imgSection = t.img
+      ? `<img
+           src="${t.img}"
+           alt="${t.brand} ${t.model}"
+           style="max-height:125px;object-fit:contain;width:auto;display:block"
+           onerror="this.style.display='none';this.nextElementSibling.style.display='flex'"
+         >
+         <div style="display:none;width:100%;height:125px">${tirePlaceholderSVG(t.brand)}</div>`
+      : tirePlaceholderSVG(t.brand);
+
+    return `<div class="pcard">
+      <div class="pbadge"><small>6 MONTHS</small>TIRE<br>PROTECTION</div>
+      <div class="pimg">${imgSection}</div>
+      <div class="pbody">
+        <div class="brow">
+          <span class="bname ${t.cls}">${t.brand}</span>
+          <span class="instock"><span class="sdot"></span> In Stock <span class="dyear">DOT ${t.dot}</span></span>
+        </div>
+        <div class="pname">${t.brand} ${t.model}</div>
+        <div class="rmini">
+          <div class="smini">${stars}</div>
+          <span style="font-size:11px;font-weight:700">${t.rating}</span>
+          <span class="sold-b">🏅 ${t.sold} sold</span>
+        </div>
+        <div class="price">₱${fmt(p)}/Tire</div>
+        <div class="bnote">For Bundle of 4 Tires</div>
+        <div class="warrow">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>${t.war} warranty
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>FREE Install
+        </div>
+        <div class="cactions">
+          <button class="bpromo" onclick="openBundle(event,${i})">View Promo</button>
+          <button class="bbuy"   onclick="openBundle(event,${i})">Buy 4 Tires Now!</button>
+        </div>
+      </div>
+      <div class="cfoot">
+        <button class="flink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="10" r="3"/><path d="M12 2a8 8 0 010 16c-4 0-8-5-8-8a8 8 0 018-8z"/></svg>
+          Find Installation Site near me
+        </button>
+        <button class="flink">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><rect x="1" y="3" width="15" height="13" rx="2"/><path d="M16 8h4l3 5v3h-7V8z"/><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="18.5" r="2.5"/></svg>
+          See Compatible Car Models
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   DIAGRAM PLACEHOLDER (sidebar)
+════════════════════════════════════════════════════════════════ */
+function showDiagPlaceholder() {
+  document.getElementById('diagImg').style.display = 'none';
+  document.getElementById('diagPlaceholder').style.display = 'flex';
+}
+window.addEventListener('DOMContentLoaded', () => {
+  const img = document.getElementById('diagImg');
+  if (!img.src || img.src === window.location.href) showDiagPlaceholder();
+});
+
+/* ════════════════════════════════════════════════════════════════
+   SEARCH / RESULTS
+════════════════════════════════════════════════════════════════ */
+function doSearch() {
+  const w = document.getElementById('sw')?.value || document.getElementById('fw')?.value || '185';
+  const a = document.getElementById('sa')?.value || document.getElementById('fa')?.value || '60';
+  const r = document.getElementById('sr')?.value || document.getElementById('fr')?.value || '15';
+  document.getElementById('tireLbl').textContent = `${w} / ${a}  R${r}`;
+
+  renderProducts();
+
+  const rw = document.getElementById('resultsWrap');
+  rw.style.display = 'block';
+  setTimeout(() => rw.scrollIntoView({ behavior: 'smooth' }), 50);
+
+  // sync sidebar selects
+  const syncSel = (id, val) => {
+    const s = document.getElementById(id);
+    if (!s) return;
+    for (let o of s.options) { if (o.value === val || o.text === val) { s.value = o.value; break; } }
+  };
+  syncSel('fw', w); syncSel('fa', a); syncSel('fr', r);
+}
+
+function clearResults() {
+  document.getElementById('resultsWrap').style.display = 'none';
+  document.querySelector('.tire-section').scrollIntoView({ behavior: 'smooth' });
+}
+
+/* ════════════════════════════════════════════════════════════════
+   BUNDLE MODAL
+════════════════════════════════════════════════════════════════ */
+function openBundle(e, idx) {
+  e.stopPropagation();
+  curTire = TIRES[idx];
+  const p = curTire.price;
+  document.getElementById('btirename').textContent = `${curTire.brand} ${curTire.model}`;
+  document.getElementById('b4price').textContent   = `₱${fmt(p * 0.97)}/TIRE`;
+  document.getElementById('s1p').textContent       = `₱${fmt(p)} /Tire`;
+  document.getElementById('op4').textContent       = `₱${fmt(p * 0.97)} /Tire`;
+  document.getElementById('op3').textContent       = `₱${fmt(p * 0.98)} /Tire`;
+  document.getElementById('op2').textContent       = `₱${fmt(p * 0.99)} /Tire`;
+  document.getElementById('btotal').textContent    = `₱${fmt(p)}`;
+  selQty = 1;
+  document.querySelectorAll('.bopt').forEach(o => o.classList.remove('sel'));
+  openOv('bundleOv');
+}
+
+function selBundle(el, qty) {
+  document.querySelectorAll('.bopt').forEach(o => o.classList.remove('sel'));
+  el.classList.add('sel');
+  selQty = qty;
+  const p = curTire.price;
+  const d = qty === 4 ? 0.97 : qty === 3 ? 0.98 : 0.99;
+  document.getElementById('btotal').textContent = `₱${fmt(p * d * qty)}`;
+}
+
+/* ════════════════════════════════════════════════════════════════
+   CHECKOUT MODAL
+════════════════════════════════════════════════════════════════ */
+function openCheckout() {
+  closeOv('bundleOv');
+  const p = curTire.price;
+  const d = selQty === 4 ? 0.97 : selQty === 3 ? 0.98 : selQty === 2 ? 0.99 : 1;
+  const total = p * d * selQty;
+  const save  = p * selQty - total;
+  document.getElementById('coamt').textContent  = `₱${fmt(total)}`;
+  document.getElementById('cosave').textContent = save > 0 ? `Checkout & Save ₱${fmt(save)} More` : '';
+  loadPartners('San Jose');
+  openOv('coOv');
+}
+
+function backBundle() { closeOv('coOv'); openOv('bundleOv'); }
+
+function loadPartners(area) {
+  const list = PARTNERS[area] || PARTNERS['San Jose'];
+  document.getElementById('pscroll').innerHTML = list.map((p, i) => `
+    <div class="pcard2 ${i === 0 ? 'sel' : ''}" onclick="selPartner(this)">
+      <div class="pthumb" style="background:${p.color}">
+        <span style="font-family:'Bebas Neue',sans-serif;font-size:24px;color:#fff;letter-spacing:2px;text-shadow:0 2px 8px rgba(0,0,0,.2)">
+          ${p.name.replace('RAPIDE ', '').substring(0, 3)}
+        </span>
+      </div>
+      <div class="pinfo2">
+        <div class="pname2">${p.name}</div>
+        <div class="paddr">${p.addr}</div>
+        <div class="pavail-tag">Earliest Time Available</div>
+        <div class="pavail-time">${p.avail}</div>
+        <button class="cdbtn" onclick="event.stopPropagation()">Check Available Date</button>
+      </div>
+    </div>
+  `).join('');
+}
+
+function selPartner(el) {
+  document.querySelectorAll('.pcard2').forEach(c => c.classList.remove('sel'));
+  el.classList.add('sel');
+}
+
+function doCheckout() {
+  alert('✅ Order confirmed! Our team will contact you shortly.');
+  closeOv('coOv');
+}
+
+/* ════════════════════════════════════════════════════════════════
+   OVERLAY HELPERS
+════════════════════════════════════════════════════════════════ */
+function openOv(id)  { document.getElementById(id).classList.add('open');    document.body.style.overflow = 'hidden'; }
+function closeOv(id) { document.getElementById(id).classList.remove('open'); document.body.style.overflow = '';       }
+function closeOvOut(e, id) { if (e.target === document.getElementById(id)) closeOv(id); }
+function openGuide() { openOv('guideOv'); }
+
+/* ════════════════════════════════════════════════════════════════
+   UI TOGGLE HELPERS
+════════════════════════════════════════════════════════════════ */
+function setFuel(btn) {
+  document.querySelectorAll('.fuel-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function setTab(btn, type) {
+  document.querySelectorAll('.stab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('form-size').style.display  = type === 'size'  ? 'block' : 'none';
+  document.getElementById('form-model').style.display = type === 'model' ? 'block' : 'none';
+}
+function setFtab(btn, type) {
+  document.querySelectorAll('.ftab').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  document.getElementById('sb-size').style.display  = type === 'size'  ? 'block' : 'none';
+  document.getElementById('sb-model').style.display = type === 'model' ? 'block' : 'none';
+}
+</script>
+</body>
+</html>

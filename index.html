@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rapidé-Auto Service Experts</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,700&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<style>
+  :root {
+    --gold:    #FFC107;
+    --amber:   #FF9800;
+    --orange:  #F4511E;
+    --deep:    #E65100;
+    --dark:    #111111;
+    --ink:     #1A1A1A;
+    --mid:     #555555;
+    --light:   #888888;
+    --smoke:   #F9F9F9;
+    --cream:   #FFFBF5;
+    --white:   #FFFFFF;
+    --border:  #E8E8E8;
+    --bwarm:   #F0EBE0;
+    --yellow:  #FFD600;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{font-family:'Barlow',sans-serif;background:var(--white);color:var(--ink);overflow-x:hidden}
+  ::-webkit-scrollbar{width:3px}::-webkit-scrollbar-track{background:#f0f0f0}::-webkit-scrollbar-thumb{background:var(--amber)}
+
+  /* ── NAV ── */
+  .nav{position:fixed;top:0;left:0;right:0;z-index:1000;background:rgba(255,255,255,0.98);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);border-bottom:1px solid var(--border);height:68px;display:flex;align-items:center;justify-content:space-between;padding:0 3rem;transition:box-shadow .3s}
+  .nav.scrolled{box-shadow:0 1px 24px rgba(0,0,0,.07)}
+  .nav-logo{font-family:'Bebas Neue',sans-serif;font-size:30px;letter-spacing:5px;color:var(--dark);text-decoration:none;display:flex;align-items:center;gap:0}
+  .nav-logo .accent{color:var(--amber)}
+  .nav-logo .ndot{width:6px;height:6px;background:var(--amber);border-radius:50%;margin-left:2px;margin-top:-14px;flex-shrink:0}
+  .nav-links{display:flex;gap:0}
+  .nav-links a{color:var(--mid);text-decoration:none;font-size:13px;font-weight:600;padding:8px 16px;border-radius:8px;transition:color .2s,background .2s;letter-spacing:.3px}
+  .nav-links a:hover,.nav-links a.active{color:var(--amber);background:rgba(255,152,0,.07)}
+  .nav-right{display:flex;align-items:center;gap:10px}
+  .nav-tel{font-size:12px;color:var(--light);font-weight:500;padding-right:14px;border-right:1px solid var(--border)}
+  .nav-tel span{color:var(--amber);font-weight:700}
+  .nav-cart{position:relative;cursor:pointer;background:var(--smoke);border:1.5px solid var(--border);color:var(--ink);width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;transition:all .2s}
+  .nav-cart:hover{border-color:var(--amber);background:rgba(255,152,0,.06)}
+  .nav-cart svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .nav-cart-badge{position:absolute;top:-7px;right:-7px;width:19px;height:19px;border-radius:50%;background:var(--orange);color:#fff;font-size:10px;font-weight:800;display:none;align-items:center;justify-content:center}
+  .nav-cart-badge.show{display:flex}
+  .nav-cta{background:var(--dark);color:#fff;border:none;padding:10px 22px;border-radius:8px;font-size:13px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;letter-spacing:.3px}
+  .nav-cta:hover{background:var(--amber);transform:translateY(-1px)}
+  .hamburger{display:none;flex-direction:column;gap:5px;cursor:pointer;padding:6px}
+  .hamburger span{display:block;width:22px;height:2px;background:var(--ink);transition:all .3s;border-radius:2px}
+  .hamburger.open span:nth-child(1){transform:translateY(7px) rotate(45deg)}
+  .hamburger.open span:nth-child(2){opacity:0}
+  .hamburger.open span:nth-child(3){transform:translateY(-7px) rotate(-45deg)}
+  .mobile-menu{display:none;position:fixed;top:68px;left:0;right:0;z-index:999;background:#fff;border-bottom:1px solid var(--border);padding:1.5rem 2rem;flex-direction:column;gap:4px;box-shadow:0 12px 40px rgba(0,0,0,.08)}
+  .mobile-menu.open{display:flex}
+  .mobile-menu a{color:var(--ink);text-decoration:none;font-size:15px;font-weight:600;padding:12px 0;border-bottom:1px solid var(--border);transition:color .2s}
+  .mobile-menu a:hover{color:var(--amber)}
+  .mobile-menu .mob-cta{margin-top:.75rem;background:var(--dark);color:#fff;text-align:center;padding:14px;font-weight:700;border-radius:8px;border-bottom:none;font-size:14px}
+
+
+  /* ── HERO ── */
+  .hero{padding-top:68px;background:var(--white);position:relative;overflow:hidden;min-height:94vh;display:flex;align-items:center}
+  .hero-watermark{position:absolute;left:-2%;top:50%;transform:translateY(-52%);font-family:'Bebas Neue',sans-serif;font-size:clamp(180px,22vw,320px);line-height:1;letter-spacing:8px;color:transparent;-webkit-text-stroke:1px rgba(0,0,0,.04);pointer-events:none;user-select:none;white-space:nowrap;z-index:0}
+  .hero-stripe{position:absolute;right:0;top:0;bottom:0;width:44%;background:linear-gradient(160deg,#FFFDE7 0%,#FFF8E1 40%,#FFE0B2 100%);z-index:0;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%)}
+  .hero-stripe-dots{position:absolute;right:0;top:0;bottom:0;width:44%;z-index:1;pointer-events:none;background-image:radial-gradient(circle,rgba(255,152,0,.15) 1.5px,transparent 1.5px);background-size:22px 22px;clip-path:polygon(12% 0,100% 0,100% 100%,0 100%)}
+  .hero-inner{position:relative;z-index:2;max-width:1280px;margin:0 auto;padding:5rem 3rem;display:grid;grid-template-columns:1fr 1fr;align-items:center;gap:5rem}
+  .hero-visual{position:relative;display:flex;justify-content:center;align-items:center}
+  .hero-eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:1.5rem}
+  .hero-eyebrow-line{width:28px;height:2px;background:var(--amber)}
+  .hero-eyebrow-text{font-size:12px;font-weight:700;color:var(--amber);letter-spacing:3px;text-transform:uppercase}
+  .hero-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(64px,8vw,110px);line-height:.88;letter-spacing:2px;color:var(--dark);margin-bottom:1.5rem}
+  .hero-title .ac{color:var(--amber)}
+  .hero-title .ol{-webkit-text-stroke:2px var(--dark);color:transparent}
+  .hero-desc{font-size:16px;color:var(--mid);line-height:1.8;max-width:420px;margin-bottom:2.5rem;font-weight:400}
+  .hero-actions{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .btn-dark{background:var(--dark);color:#fff;border:none;padding:15px 32px;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;letter-spacing:.3px;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+  .btn-dark:hover{background:var(--amber);transform:translateY(-2px)}
+  .btn-ghost{background:transparent;color:var(--ink);border:2px solid var(--border);padding:13px 28px;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;text-decoration:none;display:inline-block}
+  .btn-ghost:hover{border-color:var(--amber);color:var(--amber)}
+  .hero-stats{display:flex;gap:3rem;margin-top:3rem;padding-top:2rem;border-top:1.5px solid rgba(0,0,0,.07)}
+  .stat-num{font-family:'Bebas Neue',sans-serif;font-size:44px;color:var(--dark);line-height:1;margin-bottom:2px}
+  .stat-num .unit{color:var(--amber)}
+  .stat-lbl{font-size:12px;color:var(--light);font-weight:600;letter-spacing:.5px;text-transform:uppercase}
+
+  .hcard{width:320px;background:#fff;border:1.5px solid var(--border);border-radius:20px;box-shadow:0 30px 70px rgba(0,0,0,.1),0 4px 16px rgba(255,152,0,.08);overflow:hidden;position:relative;z-index:2;padding:2rem}
+  .hcard-heading{font-family:'Bebas Neue',sans-serif;font-size:22px;letter-spacing:2px;color:var(--dark);margin-bottom:4px}
+  .hcard-sub{font-size:12px;color:var(--light);margin-bottom:1.5rem;line-height:1.5}
+  .hcard-links{display:flex;flex-direction:column;gap:.75rem}
+  .hcard-link-item{display:flex;align-items:center;gap:12px;padding:14px 16px;border-radius:12px;background:var(--smoke);border:1.5px solid var(--border);text-decoration:none;transition:all .2s;cursor:pointer}
+  .hcard-link-item:hover{border-color:var(--amber);background:rgba(255,152,0,.05);transform:translateX(4px)}
+  .hcard-link-icon{width:36px;height:36px;border-radius:8px;background:rgba(255,152,0,.1);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .hcard-link-icon svg{width:16px;height:16px;stroke:var(--amber);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .hcard-link-label{font-size:14px;font-weight:700;color:var(--dark)}
+  .hcard-link-meta{font-size:11px;color:var(--light);margin-top:1px}
+  .hcard-link-arrow{margin-left:auto;color:var(--amber);font-size:16px;font-weight:700}
+  .hcard-img-wrap{margin-bottom:1.5rem;position:relative}
+  .hcard-lbl{display:inline-block;font-size:9px;font-weight:700;color:var(--amber);letter-spacing:1px;text-transform:uppercase;margin-bottom:.75rem;background:rgba(255,152,0,.1);padding:4px 12px;border-radius:6px}
+  .hcard-prod-img{width:100%;height:auto;max-height:200px;object-fit:contain;margin-bottom:1rem}
+  .hcard-body{padding:0}
+  .hcard-name{font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--dark);margin-bottom:6px;font-weight:700}
+  .hcard-desc{font-size:13px;color:var(--light);line-height:1.6;margin-bottom:1.5rem}
+  .hcard-row{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding-top:1.5rem;border-top:1.5px solid var(--border)}
+  .hcard-price{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1px;color:var(--amber);line-height:1}
+  .hcard-old{font-size:12px;color:var(--light);text-decoration:line-through;margin-top:2px}
+  .hcard-btn{background:var(--amber);color:#fff;border:none;padding:12px 22px;border-radius:8px;font-size:12px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;transition:all .2s;letter-spacing:.3px;white-space:nowrap}
+  .hcard-btn:hover{background:var(--orange);transform:translateY(-2px)}
+  .hfloat{position:absolute;z-index:3;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:10px 14px;box-shadow:0 8px 28px rgba(0,0,0,.1);animation:fbob 3.5s ease-in-out infinite}
+  .hfloat.a{top:6%;right:-22px;animation-delay:0s}
+  .hfloat.b{bottom:10%;left:-28px;animation-delay:1.7s}
+  .hfloat.c{top:48%;right:-30px;animation-delay:.9s}
+  @keyframes fbob{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+  .fval{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--amber);line-height:1}
+  .flbl{font-size:10px;color:var(--light);font-weight:500;margin-top:1px}
+  .frate{display:flex;align-items:center;gap:4px}
+  .fstars{display:flex;gap:1px}
+  .fstar{width:10px;height:10px;fill:#FFC107}
+
+  /* ── TICKER ── */
+  .ticker-wrap{background:var(--dark);padding:10px 0;overflow:hidden}
+  .ticker-track{display:inline-flex;animation:ticker 32s linear infinite;white-space:nowrap}
+  @keyframes ticker{to{transform:translateX(-50%)}}
+  .ticker-item{font-size:11px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:2.5px;text-transform:uppercase;padding:0 2rem;display:inline-flex;align-items:center;gap:12px}
+  .ticker-item .hi{color:var(--amber)}
+  .tsep{color:var(--amber);font-size:14px}
+
+  /* ── SALE BAR ── */
+  .sale-bar{background:var(--cream);border-bottom:1px solid var(--bwarm);padding:11px 3rem;display:flex;align-items:center;justify-content:flex-start;gap:2rem;flex-wrap:wrap}
+  .sale-lbl{font-size:13px;color:var(--mid);font-weight:600}
+  .sale-lbl strong{color:var(--orange);font-weight:800}
+  .sale-timer{display:flex;align-items:center;gap:8px}
+  .t-block{background:#fff;border:1.5px solid var(--border);border-radius:8px;padding:5px 14px;text-align:center;min-width:54px;box-shadow:0 1px 4px rgba(0,0,0,.04)}
+  .t-num{font-family:'Bebas Neue',sans-serif;font-size:24px;color:var(--dark);line-height:1;display:block}
+  .t-lbl{font-size:9px;color:var(--light);letter-spacing:.8px;text-transform:uppercase;display:block;margin-top:1px}
+  .t-sep{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--amber)}
+  .sale-pill{background:var(--amber);color:#fff;font-size:11px;font-weight:800;letter-spacing:1.5px;text-transform:uppercase;padding:6px 16px;border-radius:100px;margin-left:auto}
+
+  /* ── TRUST BAR ── */
+  .trust-bar{background:var(--smoke);border-top:1px solid var(--border);border-bottom:1px solid var(--border);padding:1.5rem 3rem}
+  .trust-inner{max-width:1280px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:2rem;flex-wrap:wrap}
+  .trust-item{display:flex;align-items:center;gap:14px}
+  .trust-icon{width:44px;height:44px;border-radius:10px;background:var(--white);border:1.5px solid var(--border);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .trust-icon svg{width:20px;height:20px;stroke:var(--amber);fill:none;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}
+  .trust-lbl{font-size:14px;font-weight:700;color:var(--dark)}
+  .trust-sub{font-size:11px;color:var(--light);margin-top:1px}
+  .trust-div{width:1px;height:40px;background:var(--border)}
+
+  /* ── SECTION UTILS ── */
+  .section{padding:5rem 3rem;max-width:1280px;margin:0 auto}
+  .eyebrow{display:inline-flex;align-items:center;gap:8px;margin-bottom:.5rem}
+  .eyebrow-line{width:24px;height:2px;background:var(--amber)}
+  .eyebrow-text{font-size:11px;font-weight:700;color:var(--amber);letter-spacing:2.5px;text-transform:uppercase}
+  .sec-h{font-family:'Bebas Neue',sans-serif;font-size:clamp(40px,4.5vw,60px);letter-spacing:1.5px;color:var(--dark);line-height:.95;margin-bottom:.75rem}
+  .sec-h .ac{color:var(--amber)}
+  .sec-p{font-size:15px;color:var(--mid);line-height:1.75;max-width:500px;font-weight:400}
+
+  /* ── PAGE HIGHLIGHTS (homepage teasers) ── */
+  .highlights{background:var(--white);border-top:1px solid var(--border)}
+  .hl-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;margin-top:2.5rem}
+  .hl-card{border-radius:20px;overflow:hidden;position:relative;min-height:300px;display:flex;flex-direction:column;justify-content:flex-end;cursor:pointer;text-decoration:none;transition:transform .3s,box-shadow .3s}
+  .hl-card:hover{transform:translateY(-6px);box-shadow:0 24px 60px rgba(0,0,0,.12)}
+  .hl-card.products-card{background:linear-gradient(150deg,#1a1a1a 0%,#2d2d2d 100%)}
+  .hl-card.services-card{background:linear-gradient(150deg,#FF9800 0%,#F4511E 100%)}
+  .hl-bg-pattern{position:absolute;inset:0;background-image:radial-gradient(circle,rgba(255,255,255,.07) 1.5px,transparent 1.5px);background-size:20px 20px}
+  .hl-bg-icon{position:absolute;right:-10px;top:-10px;font-family:'Bebas Neue',sans-serif;font-size:180px;letter-spacing:4px;opacity:.05;color:#fff;line-height:1;pointer-events:none;user-select:none}
+  .hl-content{position:relative;z-index:2;padding:2rem}
+  .hl-tag{display:inline-block;font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;padding:4px 12px;border-radius:100px;margin-bottom:.875rem}
+  .hl-card.products-card .hl-tag{background:rgba(255,152,0,.2);color:var(--amber)}
+  .hl-card.services-card .hl-tag{background:rgba(255,255,255,.2);color:#fff}
+  .hl-title{font-family:'Bebas Neue',sans-serif;font-size:44px;letter-spacing:2px;color:#fff;line-height:.9;margin-bottom:.75rem}
+  .hl-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.65;margin-bottom:1.5rem;max-width:300px}
+  .hl-btn{display:inline-flex;align-items:center;gap:8px;padding:11px 22px;border-radius:8px;font-size:13px;font-weight:700;font-family:'Barlow',sans-serif;text-decoration:none;transition:all .2s;cursor:pointer;border:none}
+  .hl-card.products-card .hl-btn{background:var(--amber);color:#fff}
+  .hl-card.products-card .hl-btn:hover{background:var(--orange)}
+  .hl-card.services-card .hl-btn{background:#fff;color:var(--dark)}
+  .hl-card.services-card .hl-btn:hover{background:rgba(255,255,255,.85)}
+  .hl-items{display:flex;gap:.5rem;flex-wrap:wrap;margin-bottom:1.25rem}
+  .hl-item-pill{font-size:11px;font-weight:600;padding:4px 10px;border-radius:100px;background:rgba(255,255,255,.12);color:rgba(255,255,255,.7)}
+
+  /* ── WHY ── */
+  .why-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:1.5rem;margin-top:2.5rem}
+  .why-item{background:#fff;border:1.5px solid var(--border);padding:2rem 1.5rem;border-radius:14px;text-align:left;transition:all .25s;position:relative;overflow:hidden}
+  .why-item::before{content:attr(data-num);position:absolute;top:-10px;right:10px;font-family:'Bebas Neue',sans-serif;font-size:80px;color:rgba(255,152,0,.06);line-height:1;pointer-events:none}
+  .why-item:hover{border-color:rgba(255,152,0,.3);box-shadow:0 8px 28px rgba(0,0,0,.05);transform:translateY(-3px)}
+  .why-num{font-family:'Bebas Neue',sans-serif;font-size:48px;color:var(--amber);line-height:1;margin-bottom:4px}
+  .why-lbl{font-size:14px;font-weight:800;color:var(--dark);margin-bottom:4px}
+  .why-sub{font-size:12px;color:var(--light);line-height:1.65}
+
+  /* ── LOCATION ── */
+  .loc-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1.5rem;margin-top:2.5rem}
+  .loc-card{background:#fff;border:1.5px solid var(--border);border-radius:16px;padding:2rem;cursor:pointer;transition:all .25s;position:relative;overflow:hidden}
+  .loc-card:hover{border-color:rgba(255,152,0,.4);box-shadow:0 12px 36px rgba(0,0,0,.06);transform:translateY(-3px)}
+  .loc-icon-row{display:flex;align-items:flex-start;gap:14px;margin-bottom:1.25rem}
+  .loc-pin-box{width:44px;height:44px;border-radius:10px;background:rgba(255,152,0,.08);border:1.5px solid rgba(255,152,0,.2);display:flex;align-items:center;justify-content:center;flex-shrink:0}
+  .loc-pin-box svg{width:20px;height:20px;stroke:var(--amber);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .loc-city{font-family:'Bebas Neue',sans-serif;font-size:28px;letter-spacing:1.5px;color:var(--dark);line-height:1}
+  .loc-branch{font-size:12px;color:var(--amber);font-weight:700;letter-spacing:.5px}
+  .loc-divider{height:1px;background:var(--border);margin:1.25rem 0}
+  .loc-addr{font-size:13px;color:var(--mid);line-height:1.7;margin-bottom:1rem;display:flex;align-items:flex-start;gap:7px}
+  .loc-addr svg{width:14px;height:14px;flex-shrink:0;margin-top:2px;stroke:var(--light);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+  .loc-hours{margin-bottom:1rem}
+  .loc-hours-lbl{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:4px}
+  .loc-time-row{display:flex;justify-content:space-between;font-size:12px;padding:3px 0;border-bottom:1px solid var(--border)}
+  .loc-time-row:last-child{border:none}
+  .loc-day{color:var(--mid);font-weight:600}
+  .loc-hour{color:var(--dark);font-weight:600}
+  .loc-open{display:inline-flex;align-items:center;gap:6px;margin-top:1rem;font-size:12px;font-weight:700;background:rgba(67,160,71,.06);border:1.5px solid rgba(67,160,71,.2);padding:6px 14px;border-radius:100px;color:#2E7D32}
+  .ldot{width:7px;height:7px;border-radius:50%;background:#43A047;animation:bpulse 2s infinite}
+  @keyframes bpulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.5;transform:scale(.8)}}
+  .loc-cta{width:100%;margin-top:1.25rem;background:var(--dark);color:#fff;border:none;padding:12px;font-size:13px;font-weight:700;font-family:'Barlow',sans-serif;border-radius:10px;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+  .loc-cta:hover{background:var(--amber)}
+
+  /* ── MODAL ── */
+  .modal-ov{position:fixed;inset:0;z-index:9999;background:rgba(17,17,17,.65);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .3s;padding:2rem}
+  .modal-ov.open{opacity:1;pointer-events:all}
+  .modal{background:#fff;border-radius:20px;max-width:520px;width:100%;padding:2.5rem;transform:translateY(24px);transition:transform .3s;position:relative;max-height:90vh;overflow-y:auto;box-shadow:0 40px 100px rgba(0,0,0,.2)}
+  .modal-ov.open .modal{transform:translateY(0)}
+  .modal-close{position:absolute;top:1.25rem;right:1.25rem;width:34px;height:34px;background:var(--smoke);border:1.5px solid var(--border);color:var(--mid);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s;font-family:'Barlow',sans-serif}
+  .modal-close:hover{border-color:var(--orange);color:var(--orange)}
+  .modal-eyebrow{display:flex;align-items:center;gap:8px;margin-bottom:.5rem}
+  .modal-title{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:1.5px;color:var(--dark);margin-bottom:4px}
+  .modal-title .ac{color:var(--amber)}
+  .modal-sub{font-size:13px;color:var(--light);margin-bottom:2rem;line-height:1.6}
+  .fgrp{margin-bottom:1.25rem}
+  .flabel{font-size:10px;font-weight:700;color:var(--dark);letter-spacing:1.5px;text-transform:uppercase;display:block;margin-bottom:6px}
+  .finput,.fsel,.ftxt{width:100%;background:var(--smoke);border:1.5px solid var(--border);color:var(--dark);padding:12px 14px;font-size:14px;font-family:'Barlow',sans-serif;border-radius:9px;transition:border-color .2s,background .2s;outline:none;appearance:none}
+  .finput:focus,.fsel:focus,.ftxt:focus{border-color:var(--amber);background:#fff;box-shadow:0 0 0 3px rgba(255,152,0,.07)}
+  .ftxt{resize:vertical;min-height:80px}
+  .frow{display:grid;grid-template-columns:1fr 1fr;gap:1rem}
+  .fsubmit{width:100%;background:var(--dark);color:#fff;border:none;padding:14px;font-size:14px;font-weight:700;cursor:pointer;font-family:'Barlow',sans-serif;border-radius:10px;transition:all .2s;margin-top:.5rem;letter-spacing:.3px}
+  .fsubmit:hover{background:var(--amber);transform:translateY(-1px)}
+
+  /* ── CART DRAWER ── */
+  .cart-ov{position:fixed;inset:0;z-index:8888;background:rgba(17,17,17,.4);backdrop-filter:blur(4px);-webkit-backdrop-filter:blur(4px);opacity:0;pointer-events:none;transition:opacity .3s}
+  .cart-ov.open{opacity:1;pointer-events:all}
+  .cart-drawer{position:fixed;top:0;right:0;bottom:0;z-index:8889;width:380px;max-width:100vw;background:#fff;border-left:1.5px solid var(--border);transform:translateX(100%);transition:transform .35s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;box-shadow:-16px 0 60px rgba(0,0,0,.1)}
+  .cart-drawer.open{transform:translateX(0)}
+  .cart-hdr{padding:1.5rem;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+  .cart-title{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:2px;color:var(--dark)}
+  .cart-cnt{font-size:12px;color:var(--light);font-weight:600;margin-top:1px}
+  .cart-cls{width:34px;height:34px;background:var(--smoke);border:1.5px solid var(--border);color:var(--mid);font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:8px;transition:all .2s;font-family:'Barlow',sans-serif}
+  .cart-cls:hover{border-color:var(--orange);color:var(--orange)}
+  .cart-items{flex:1;overflow-y:auto;padding:1rem 1.5rem}
+  .cart-empty{text-align:center;padding:3rem 1rem;color:var(--light);font-size:14px;font-weight:500}
+  .ce-icon-box{width:60px;height:60px;background:var(--smoke);border:1.5px solid var(--border);border-radius:14px;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem}
+  .ce-icon-box svg{width:26px;height:26px;stroke:var(--light);fill:none;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round}
+  .ci{display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);align-items:center}
+  .ci-ico{width:52px;height:52px;background:var(--smoke);border:1px solid var(--border);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;overflow:hidden}
+  .ci-ico img{width:40px;height:40px;object-fit:contain}
+  .ci-inf{flex:1}
+  .ci-nm{font-size:13px;color:var(--dark);font-weight:700;margin-bottom:2px}
+  .ci-pr{font-family:'Bebas Neue',sans-serif;font-size:18px;color:var(--amber);letter-spacing:.5px}
+  .ci-qty{display:flex;align-items:center;gap:8px;margin-top:6px}
+  .qbtn{width:26px;height:26px;background:var(--smoke);border:1.5px solid var(--border);color:var(--dark);font-size:14px;cursor:pointer;display:flex;align-items:center;justify-content:center;border-radius:6px;transition:all .2s;font-weight:700;font-family:'Barlow',sans-serif}
+  .qbtn:hover{border-color:var(--amber);background:rgba(255,152,0,.07)}
+  .qnum{font-size:13px;color:var(--dark);font-weight:700;min-width:20px;text-align:center}
+  .ci-rm{background:transparent;border:none;color:#ccc;cursor:pointer;font-size:16px;transition:color .2s;padding:4px;font-family:'Barlow',sans-serif}
+  .ci-rm:hover{color:#E53935}
+  .cart-foot{padding:1.5rem;border-top:1px solid var(--border);background:var(--smoke)}
+  .cart-sub{display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem}
+  .cs-lbl{font-size:11px;color:var(--light);font-weight:700;letter-spacing:1.5px;text-transform:uppercase}
+  .cs-val{font-family:'Bebas Neue',sans-serif;font-size:32px;color:var(--dark);letter-spacing:1px}
+  .cart-ckout{width:100%;background:var(--dark);color:#fff;border:none;padding:14px;font-size:14px;font-weight:700;font-family:'Barlow',sans-serif;border-radius:10px;cursor:pointer;transition:all .2s;letter-spacing:.3px}
+  .cart-ckout:hover{background:var(--amber);transform:translateY(-1px)}
+
+  /* ── TOAST ── */
+  .toast{position:fixed;bottom:2rem;right:2rem;z-index:99999;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:.875rem 1.25rem;display:flex;align-items:center;gap:12px;transform:translateY(100px);opacity:0;transition:all .35s cubic-bezier(.4,0,.2,1);pointer-events:none;max-width:300px;box-shadow:0 12px 40px rgba(0,0,0,.1)}
+  .toast.show{transform:translateY(0);opacity:1;pointer-events:all}
+  .toast-dot{width:7px;height:7px;border-radius:50%;background:var(--amber);flex-shrink:0}
+  .toast-text{font-size:13px;color:var(--ink);line-height:1.5;font-weight:500}
+  .toast-text strong{color:var(--amber)}
+
+  /* ── FOOTER ── */
+  footer{background:var(--dark);padding:4rem 3rem 2rem}
+  .footer-inner{max-width:1280px;margin:0 auto}
+  .footer-top{display:grid;grid-template-columns:2fr 1fr 1fr 1fr;gap:3rem;margin-bottom:3rem}
+  .flogo{font-family:'Bebas Neue',sans-serif;font-size:36px;letter-spacing:5px;color:#fff;display:block;margin-bottom:1rem;text-decoration:none}
+  .flogo em{color:var(--amber);font-style:normal}
+  .fbrand-p{font-size:13px;color:rgba(255,255,255,.35);line-height:1.75;max-width:260px;font-weight:300}
+  .fsocials{display:flex;gap:8px;margin-top:1.5rem}
+  .fsoc{width:36px;height:36px;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;color:rgba(255,255,255,.35);cursor:pointer;text-decoration:none;transition:all .2s;font-family:'Barlow',sans-serif;letter-spacing:.5px}
+  .fsoc:hover{border-color:var(--amber);color:var(--amber)}
+  .fcol-ttl{font-size:10px;font-weight:700;color:var(--amber);letter-spacing:2px;text-transform:uppercase;margin-bottom:1.25rem}
+  .fcol ul{list-style:none}
+  .fcol li{margin-bottom:10px}
+  .fcol a{font-size:13px;color:rgba(255,255,255,.35);text-decoration:none;transition:color .2s;font-weight:400}
+  .fcol a:hover{color:#fff}
+  .footer-bot{border-top:1px solid rgba(255,255,255,.07);padding-top:1.5rem;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:1rem}
+  .fcopy{font-size:12px;color:rgba(255,255,255,.2)}
+  .flegal{display:flex;gap:1.5rem}
+  .flegal a{font-size:12px;color:rgba(255,255,255,.2);text-decoration:none;transition:color .2s}
+  .flegal a:hover{color:rgba(255,255,255,.5)}
+
+  /* ── REVEAL ── */
+  .reveal{opacity:0;transform:translateY(28px);transition:opacity .65s ease,transform .65s ease}
+  .reveal.visible{opacity:1;transform:translateY(0)}
+
+  /* ── RESPONSIVE ── */
+  @media(max-width:960px){
+    .hero-inner{grid-template-columns:1fr;gap:2.5rem}
+    .nav-links,.nav-tel{display:none}
+    .hamburger{display:flex}
+    .footer-top{grid-template-columns:1fr 1fr;gap:2rem}
+    .trust-div{display:none}
+    .trust-inner{justify-content:center}
+    .hl-grid{grid-template-columns:1fr}
+  }
+  @media(max-width:600px){
+    .hero-title{font-size:58px}
+    .hero-stats{gap:1.5rem}
+    .footer-top{grid-template-columns:1fr}
+    .footer-bot{flex-direction:column;text-align:center}
+    .frow{grid-template-columns:1fr}
+    .cart-drawer{width:100vw}
+    .sale-bar{gap:1rem}
+    .section{padding:4rem 1.5rem}
+    .nav,.mobile-menu{padding-left:1.5rem;padding-right:1.5rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav class="nav" id="nav">
+  <a class="nav-logo" href="index.html">Rapid<span class="accent">é</span><span class="ndot"></span></a>
+  <div class="nav-links">
+    <a href="index.html" class="nav-link active">Home</a>
+    <a href="products.html" class="nav-link">Products</a>
+    <a href="services.html" class="nav-link">Services</a>
+    <a href="tires.html" class="nav-link">Tires</a>
+    <a href="#location" class="nav-link">Location</a>
+  </div>
+  <div class="nav-right">
+    <div class="nav-tel">Hotline: <span>0919-2694-103-Rapidé</span></div>
+    <button class="nav-cart" id="cartToggle" title="Cart">
+      <svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg>
+      <span class="nav-cart-badge" id="cartBadge">0</span>
+    </button>
+    <button class="nav-cta" id="bookNowBtn">Book Now</button>
+    <div class="hamburger" id="hamburger"><span></span><span></span><span></span></div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobileMenu">
+  <a href="index.html">Home</a>
+  <a href="products.html">Products</a>
+  <a href="services.html">Services</a>
+  <a href="tires.html">Tires</a>
+  <a href="#location">Location</a>
+  <a href="#" class="mob-cta" id="mobBookBtn">Book an Appointment</a>
+</div>
+
+<!-- HERO -->
+<section class="hero" id="hero">
+  <div class="hero-watermark">RAPIDÉ</div>
+  <div class="hero-stripe"></div>
+  <div class="hero-stripe-dots"></div>
+  <div class="hero-inner">
+    <div>
+      <div class="hero-eyebrow"><div class="hero-eyebrow-line"></div><span class="hero-eyebrow-text">Monthly Sale — Up to 40% OFF</span></div>
+      <h1 class="hero-title">YOUR<br><span class="ac">CAR</span><br>DESERVES<br><span class="ol">THE BEST</span></h1>
+      <p class="hero-desc">Professional auto care by certified mechanics. From quick oil changes to full engine overhauls — we keep you rolling safely.</p>
+      <div class="hero-actions">
+        <button class="btn-dark" id="heroBookBtn">Book an Appointment <span style="color:var(--amber)">→</span></button>
+        <a class="btn-ghost" href="#services">Explore Services</a>
+      </div>
+      <div class="hero-stats">
+        <div><div class="stat-num">12<span class="unit">K+</span></div><div class="stat-lbl">Happy Clients</div></div>
+        <div><div class="stat-num"><span class="unit">1</span> Branch</div><div class="stat-lbl">San Jose</div></div>
+        <div><div class="stat-num">97<span class="unit">%</span></div><div class="stat-lbl">Satisfaction</div></div>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div style="display:flex;flex-direction:column;gap:1rem;width:100%">
+        <a href="products.html" style="display:flex;align-items:center;gap:1rem;padding:1.5rem;background:var(--smoke);border:1.5px solid var(--border);border-radius:12px;text-decoration:none;transition:all .2s;cursor:pointer" onmouseover="this.style.borderColor='var(--amber)';this.style.background='rgba(255,152,0,.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--smoke)'">
+          <div style="width:44px;height:44px;background:rgba(255,152,0,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg></div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Shop Products</div><div style="font-size:12px;color:var(--light);margin-top:2px">Browse all auto parts</div></div>
+          <div style="margin-left:auto;color:var(--amber);font-size:18px">→</div>
+        </a>
+        <a href="services.html" style="display:flex;align-items:center;gap:1rem;padding:1.5rem;background:var(--smoke);border:1.5px solid var(--border);border-radius:12px;text-decoration:none;transition:all .2s;cursor:pointer" onmouseover="this.style.borderColor='var(--amber)';this.style.background='rgba(255,152,0,.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--smoke)'">
+          <div style="width:44px;height:44px;background:rgba(255,152,0,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9h12M6 9a2 2 0 110-4 2 2 0 010 4zm12 0a2 2 0 100-4 2 2 0 000 4zM9 22h6a2 2 0 002-2v-8h-2v-3a1 1 0 00-1-1h-4a1 1 0 00-1 1v3H7v8a2 2 0 002 2z"/></svg></div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Our Services</div><div style="font-size:12px;color:var(--light);margin-top:2px">Professional auto care</div></div>
+          <div style="margin-left:auto;color:var(--amber);font-size:18px">→</div>
+        </a>
+        <a href="tires.html" style="display:flex;align-items:center;gap:1rem;padding:1.5rem;background:var(--smoke);border:1.5px solid var(--border);border-radius:12px;text-decoration:none;transition:all .2s;cursor:pointer" onmouseover="this.style.borderColor='var(--amber)';this.style.background='rgba(255,152,0,.05)'" onmouseout="this.style.borderColor='var(--border)';this.style.background='var(--smoke)'">
+          <div style="width:44px;height:44px;background:rgba(255,152,0,.1);border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="7"/><circle cx="12" cy="12" r="11"/></svg></div>
+          <div><div style="font-size:14px;font-weight:700;color:var(--dark)">Tires</div><div style="font-size:12px;color:var(--light);margin-top:2px">Premium tire selection</div></div>
+          <div style="margin-left:auto;color:var(--amber);font-size:18px">→</div>
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker-track">
+    <span class="ticker-item"><span class="hi">Monthly Sale</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item">Up to <span class="hi">40% OFF</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item">Free <span class="hi">Battery Check</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item"><span class="hi">Casa-Quality</span> Service <span class="tsep">✦</span></span>
+    <span class="ticker-item">San Jose's <span class="hi">Trusted</span> Auto Shop <span class="tsep">✦</span></span>
+    <span class="ticker-item">Book Online — <span class="hi">Same Day</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item"><span class="hi">Monthly Sale</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item">Up to <span class="hi">40% OFF</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item">Free <span class="hi">Battery Check</span> <span class="tsep">✦</span></span>
+    <span class="ticker-item"><span class="hi">Casa-Quality</span> Service <span class="tsep">✦</span></span>
+    <span class="ticker-item">San Jose's <span class="hi">Trusted</span> Auto Shop <span class="tsep">✦</span></span>
+    <span class="ticker-item">Book Online — <span class="hi">Same Day</span> <span class="tsep">✦</span></span>
+  </div>
+</div>
+
+<!-- SALE BAR -->
+<div class="sale-bar">
+  <div class="sale-lbl">● <strong>Monthly Sale</strong> — Limited time only. Ends in:</div>
+  <div class="sale-timer">
+    <div class="t-block"><span class="t-num" id="d">12</span><span class="t-lbl">Days</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="h">08</span><span class="t-lbl">Hrs</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="m">33</span><span class="t-lbl">Min</span></div>
+    <span class="t-sep">:</span>
+    <div class="t-block"><span class="t-num" id="s">57</span><span class="t-lbl">Sec</span></div>
+  </div>
+  <div class="sale-pill">Up to 40% OFF</div>
+</div>
+
+<!-- TRUST BAR -->
+<div class="trust-bar">
+  <div class="trust-inner">
+    <div class="trust-item">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg></div>
+      <div><div class="trust-lbl">Genuine Parts</div><div class="trust-sub">OEM &amp; casa-certified</div></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg></div>
+      <div><div class="trust-lbl">30-Min Average</div><div class="trust-sub">Fast turnaround time</div></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg></div>
+      <div><div class="trust-lbl">Service Warranty</div><div class="trust-sub">Up to 12-month coverage</div></div>
+    </div>
+    <div class="trust-div"></div>
+    <div class="trust-item">
+      <div class="trust-icon"><svg viewBox="0 0 24 24"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg></div>
+      <div><div class="trust-lbl">Certified Mechanics</div><div class="trust-sub">Trained &amp; licensed technicians</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- PAGE HIGHLIGHTS -->
+<section class="highlights">
+  <div class="section reveal">
+    <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Explore Rapidé</span></div>
+    <h2 class="sec-h">WHAT WE <span class="ac">OFFER</span></h2>
+    <p class="sec-p">Everything your car needs browse our full product catalog or book a service with our certified mechanics.</p>
+    <div class="hl-grid">
+      <a class="hl-card products-card" href="products.html">
+        <div class="hl-bg-pattern"></div>
+        <div class="hl-bg-icon">SHOP</div>
+        <div class="hl-content">
+          <span class="hl-tag">Monthly Sale — Up to 40% OFF</span>
+          <div class="hl-items">
+            <span class="hl-item-pill">Lubricants</span>
+            <span class="hl-item-pill">Batteries</span>
+            <span class="hl-item-pill">Brakes</span>
+            <span class="hl-item-pill">Filters</span>
+            <span class="hl-item-pill">Fluids</span>
+          </div>
+          <div class="hl-title">SHOP AUTO<br>PRODUCTS</div>
+          <div class="hl-desc">Genuine parts and fluids at honest prices. Casa-quality delivered to your door or installed on-site.</div>
+          <span class="hl-btn">Browse Products →</span>
+        </div>
+      </a>
+      <a class="hl-card services-card" href="services.html">
+        <div class="hl-bg-pattern"></div>
+        <div class="hl-bg-icon">SVC</div>
+        <div class="hl-content">
+          <span class="hl-tag">Certified Mechanics · Transparent Pricing</span>
+          <div class="hl-items">
+            <span class="hl-item-pill">Oil Change</span>
+            <span class="hl-item-pill">Aircon</span>
+            <span class="hl-item-pill">Tires</span>
+            <span class="hl-item-pill">Brakes</span>
+            <span class="hl-item-pill">Packages</span>
+          </div>
+          <div class="hl-title">BOOK A<br>SERVICE</div>
+          <div class="hl-desc">From quick oil changes to full engine overhauls. No surprises — ever. Book online for a guaranteed slot.</div>
+          <span class="hl-btn">View Services →</span>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- WHY US -->
+<section style="background:var(--smoke);border-top:1px solid var(--border)">
+  <div class="section reveal">
+    <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Why Rapidé</span></div>
+    <h2 class="sec-h">BUILT ON <span class="ac">TRUST</span></h2>
+    <div class="why-grid">
+      <div class="why-item" data-num="12K"><div class="why-num">12K+</div><div class="why-lbl">Satisfied Clients</div><div class="why-sub">Thousands of happy car owners across all our branches.</div></div>
+      <div class="why-item" data-num="97%"><div class="why-num">97%</div><div class="why-lbl">Satisfaction Rate</div><div class="why-sub">Based on post-service customer surveys every month.</div></div>
+      <div class="why-item" data-num="1"><div class="why-num">1</div><div class="why-lbl">Location</div><div class="why-sub">Conveniently located in San Jose, Philippines.</div></div>
+      <div class="why-item" data-num="5YR"><div class="why-num">5YR</div><div class="why-lbl">In Business</div><div class="why-sub">Years of trusted, casa-quality auto care expertise.</div></div>
+      <div class="why-item" data-num="30"><div class="why-num">30<span style="font-size:22px;font-family:'Barlow',sans-serif;font-weight:700">min</span></div><div class="why-lbl">Avg Service Time</div><div class="why-sub">Fast, efficient, and thorough — no cutting corners.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- LOCATION -->
+<section id="location" style="background:var(--white);border-top:1px solid var(--border)">
+  <div class="section reveal">
+    <div class="eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">Find Us</span></div>
+    <h2 class="sec-h">OUR<span class="ac"> LOCATION</span></h2>
+    <p class="sec-p">Walk-in welcome anytime or book online for a guaranteed slot.</p>
+    <div style="display:grid;grid-template-columns:1fr 1.3fr;gap:2rem;margin-top:2.5rem;align-items:start">
+      <!-- Map -->
+      <div class="loc-card" style="padding:0; overflow:hidden; border-radius:16px; min-height:400px; display:flex; align-items:stretch;">
+        <div style="width:500%; height:500px;">
+          <iframe 
+            src="https://www.google.com/maps/embed?pb=!1m16!1m12!1m3!1d501769.0999311526!2d121.64628256720748!3d10.729000125144099!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!2m1!1sRapide%20Auto%20Service%20Experts!5e0!3m2!1sen!2sph!4v1776735286997!5m2!1sen!2sph"
+            width="100%" 
+            height="100%" 
+            style="border:0; min-height:400px; display:block;"
+            allowfullscreen 
+            loading="lazy" 
+            referrerpolicy="no-referrer-when-downgrade">
+          </iframe>
+        </div>
+      </div>
+      <!-- About RAPIDÉ -->
+      <div style="background:#fff;border-radius:0;padding:3rem;display:flex;flex-direction:column;justify-content:center">
+        <div style="font-family:'Bebas Neue',sans-serif;font-size:48px;letter-spacing:2px;color:var(--dark);margin-bottom:2rem;line-height:1.1">About <span style="color:var(--amber)">RAPIDÉ</span></div>
+        <p style="font-size:16px;color:var(--mid);line-height:1.9;margin-bottom:2rem;font-weight:500">Our team of skilled technicians, coupled with state of the art equipment, allow us to fulfill this vision. This vision is what we now refer to as the Rapidé Way, and it's something that separates us from every other competitor out there.</p>
+        <p style="font-size:16px;color:var(--mid);line-height:1.9;margin-bottom:3rem;font-weight:500">Curious about the <strong style="color: orange;">#RapidéWay</strong> and what makes it so good? Come and experience it for yourself!</p>
+      </div>
+    </div>
+    <div style="display:flex;gap:1rem;margin-top:1.5rem;flex-wrap:wrap">
+      <div style="flex:1;min-width:200px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:14px">
+        <div style="width:40px;height:40px;background:rgba(255,152,0,.08);border:1.5px solid rgba(255,152,0,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.45 12 19.79 19.79 0 01.38 3.38 2 2 0 012.36 2h3a2 2 0 012 1.72c.127.96.361 1.903.7 2.81a2 2 0 01-.45 2.11L6.91 9.91a16 16 0 006.29 6.29l.79-.79a2 2 0 012.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0122 16.92z"/></svg></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Call Us</div><div style="font-size:14px;font-weight:700;color:var(--dark)">0917-555-RAPID</div></div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:14px">
+        <div style="width:40px;height:40px;background:rgba(255,152,0,.08);border:1.5px solid rgba(255,152,0,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Email Us</div><div style="font-size:14px;font-weight:700;color:var(--dark)">hello@rapide.com.ph</div></div>
+      </div>
+      <div style="flex:1;min-width:200px;background:#fff;border:1.5px solid var(--border);border-radius:12px;padding:1.25rem;display:flex;align-items:center;gap:14px">
+        <div style="width:40px;height:40px;background:rgba(255,152,0,.08);border:1.5px solid rgba(255,152,0,.2);border-radius:9px;display:flex;align-items:center;justify-content:center;flex-shrink:0"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg></div>
+        <div><div style="font-size:10px;font-weight:700;color:var(--amber);letter-spacing:1.5px;text-transform:uppercase;margin-bottom:3px">Book Online</div><div style="font-size:14px;font-weight:700;color:var(--dark)">Same-day slots available</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-top">
+      <div>
+        <a class="flogo" href="index.html">Rapid<em>é</em></a>
+        <p class="fbrand-p">Auto Service Experts delivering casa-quality care at honest, affordable prices. Your trusted partner for every kilometer of the road ahead.</p>
+      </div>
+      <div class="fcol"><div class="fcol-ttl">Services</div><ul><li><a href="services.html">Oil Change</a></li><li><a href="services.html">Tire Service</a></li><li><a href="services.html">Brake Service</a></li><li><a href="services.html">Aircon Service</a></li><li><a href="services.html">Battery Check</a></li><li><a href="services.html">Full Inspection</a></li></ul></div>
+      <div class="fcol"><div class="fcol-ttl">Company</div><ul><li><a href="#">About Rapidé</a></li><li><a href="#">Careers</a></li><li><a href="#">News &amp; Promos</a></li><li><a href="#">Franchise</a></li><li><a href="#">Contact Us</a></li></ul></div>
+      <div class="fcol"><div class="fcol-ttl">Support</div><ul><li><a href="#">FAQs</a></li><li><a href="#">Warranty Policy</a></li><li><a href="#">Service Guarantee</a></li><li><a href="#">Track My Booking</a></li><li><a href="#">0919-2694-103-Rapidé</a></li></ul></div>
+    </div>
+    <div class="footer-bot">
+      <div class="fcopy">© 2026 Rapidé Auto Services. All rights reserved. San Jose de Buenavista, Philippines.</div>
+      <div class="flegal"><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></div>
+    </div>
+  </div>
+</footer>
+
+<!-- BOOKING MODAL -->
+<div class="modal-ov" id="bookingModal">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">✕</button>
+    <div class="modal-eyebrow"><div class="eyebrow-line"></div><span class="eyebrow-text">San Jose Branch</span></div>
+    <div class="modal-title">BOOK AN <span class="ac">APPOINTMENT</span></div>
+    <p class="modal-sub">Fill in your details and we'll confirm within 30 minutes.</p>
+    <div class="fgrp"><label class="flabel">Full Name</label><input type="text" class="finput" placeholder="Juan dela Cruz"></div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Phone Number</label><input type="tel" class="finput" placeholder="09XX-XXX-XXXX"></div>
+      <div class="fgrp"><label class="flabel">Email</label><input type="email" class="finput" placeholder="juan@email.com"></div>
+    </div>
+    <div class="fgrp"><label class="flabel">Service</label><select class="fsel" id="modalService"><option value="">— Select a service —</option><option>Oil Change</option><option>Tire Service</option><option>Aircon Service</option><option>Brake Service</option><option>Battery Check</option><option>Full Inspection</option><option>Engine Flush</option><option>Transmission Service</option><option>Basic Care Package</option><option>Full Shield Package</option><option>Premium Plus Package</option></select></div>
+    <div class="frow">
+      <div class="fgrp"><label class="flabel">Branch</label><select class="fsel"><option>San Jose de Buenavista</option></select></div>
+      <div class="fgrp"><label class="flabel">Preferred Date</label><input type="date" class="finput"></div>
+    </div>
+    <div class="fgrp"><label class="flabel">Car Model &amp; Year</label><input type="text" class="finput" placeholder="e.g. Toyota Vios 2022"></div>
+    <div class="fgrp"><label class="flabel">Notes (Optional)</label><textarea class="ftxt" placeholder="Any concerns or special requests?"></textarea></div>
+    <button class="fsubmit" onclick="submitBooking()">Confirm Appointment →</button>
+  </div>
+</div>
+
+<!-- CART DRAWER -->
+<div class="cart-ov" id="cartOverlay"></div>
+<div class="cart-drawer" id="cartDrawer">
+  <div class="cart-hdr">
+    <div><div class="cart-title">Your Cart</div><div class="cart-cnt" id="cartCountText">0 items</div></div>
+    <button class="cart-cls" id="cartClose">✕</button>
+  </div>
+  <div class="cart-items" id="cartItems">
+    <div class="cart-empty"><div class="ce-icon-box"><svg viewBox="0 0 24 24"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>Your cart is empty.<br>Add products to get started!</div>
+  </div>
+  <div class="cart-foot">
+    <div class="cart-sub"><span class="cs-lbl">Subtotal</span><span class="cs-val" id="cartTotal">₱0</span></div>
+    <button class="cart-ckout" onclick="checkout()">Proceed to Checkout →</button>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"><div class="toast-dot"></div><div class="toast-text" id="toastText"></div></div>
+
+<script>
+  const nav=document.getElementById('nav');
+  window.addEventListener('scroll',()=>nav.classList.toggle('scrolled',scrollY>60));
+  const ham=document.getElementById('hamburger'),mob=document.getElementById('mobileMenu');
+  ham.addEventListener('click',()=>{ham.classList.toggle('open');mob.classList.toggle('open');});
+  mob.querySelectorAll('a').forEach(a=>a.addEventListener('click',()=>{ham.classList.remove('open');mob.classList.remove('open');}));
+  function openBooking(svc){document.getElementById('bookingModal').classList.add('open');document.body.style.overflow='hidden';if(svc){const s=document.getElementById('modalService');for(let o of s.options)if(o.text===svc){s.value=o.value;break;}}}
+  function closeBooking(){document.getElementById('bookingModal').classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('modalClose').addEventListener('click',closeBooking);
+  document.getElementById('bookingModal').addEventListener('click',e=>{if(e.target===e.currentTarget)closeBooking();});
+  document.getElementById('bookNowBtn').addEventListener('click',()=>openBooking());
+  document.getElementById('heroBookBtn').addEventListener('click',()=>openBooking());
+  document.getElementById('mobBookBtn').addEventListener('click',e=>{e.preventDefault();openBooking();});
+  function submitBooking(){
+  const name = document.querySelector('#bookingModal .finput[placeholder="Juan dela Cruz"]').value;
+  const phone = document.querySelector('#bookingModal .finput[placeholder="09XX-XXX-XXXX"]').value;
+  const email = document.querySelector('#bookingModal .finput[placeholder="juan@email.com"]').value;
+  const service = document.getElementById('modalService').value;
+  const dateInput = document.querySelector('#bookingModal input[type="date"]');
+  const vehicle = document.querySelector('#bookingModal .finput[placeholder*="Toyota"]').value;
+  const notes = document.querySelector('#bookingModal .ftxt').value;
+  
+  if(!name || !phone || !service){
+    showToast('<strong>Please fill in required fields!</strong>');
+    return;
+  }
+  
+  // Save booking to localStorage
+  const bookings = JSON.parse(localStorage.getItem('rapide_bookings') || '[]');
+  bookings.push({
+    id: 'BKG-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase(),
+    timestamp: Date.now(),
+    name: name,
+    email: email,
+    phone: phone,
+    service: service,
+    appointmentDate: dateInput ? dateInput.value : '',
+    appointmentTime: '',
+    vehicle: vehicle,
+    message: notes,
+    status: 'pending'
+  });
+  localStorage.setItem('rapide_bookings', JSON.stringify(bookings));
+  
+  showToast('<strong>Booking confirmed!</strong> We\'ll call you within 30 minutes.');
+  closeBooking();
+  // Reset form
+  document.querySelector('#bookingModal .finput[placeholder="Juan dela Cruz"]').value = '';
+  document.querySelector('#bookingModal .finput[placeholder="09XX-XXX-XXXX"]').value = '';
+  document.querySelector('#bookingModal .finput[placeholder="juan@email.com"]').value = '';
+  document.getElementById('modalService').value = '';
+  if(dateInput) dateInput.value = '';
+  document.querySelector('#bookingModal .finput[placeholder*="Toyota"]').value = '';
+  document.querySelector('#bookingModal .ftxt').value = '';
+}
+  let cart=[];
+  function addToCart(id,name,price,type){cart.push({id:id,name:name,price:price,qty:1,type:type});updateCart();showToast(`<strong>${name}</strong> added to cart!`);}
+  function openCart(){document.getElementById('cartDrawer').classList.add('open');document.getElementById('cartOverlay').classList.add('open');document.body.style.overflow='hidden';}
+  function closeCart(){document.getElementById('cartDrawer').classList.remove('open');document.getElementById('cartOverlay').classList.remove('open');document.body.style.overflow='';}
+  document.getElementById('cartClose').addEventListener('click',closeCart);
+  document.getElementById('cartOverlay').addEventListener('click',closeCart);
+  document.getElementById('cartToggle').addEventListener('click',openCart);
+  function updateCart(){const badge=document.getElementById('cartBadge');const qty=cart.reduce((a,i)=>a+i.qty,0);const total=cart.reduce((a,i)=>a+i.price*i.qty,0);badge.textContent=qty;badge.classList.toggle('show',qty>0);document.getElementById('cartCountText').textContent=qty+' item'+(qty!==1?'s':'');document.getElementById('cartTotal').textContent='₱'+total.toLocaleString();const el=document.getElementById('cartItems');if(!cart.length){el.innerHTML='<div class="cart-empty"><div class="ce-icon-box"><svg viewBox="0 0 24 24" stroke="#888" fill="none" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 01-8 0"/></svg></div>Your cart is empty.<br>Add products to get started!</div>';return;}el.innerHTML=cart.map((item,i)=>`<div class="ci"><div class="ci-inf"><div class="ci-nm">${item.name}</div><div class="ci-pr">₱${(item.price*item.qty).toLocaleString()}</div><div class="ci-qty"><button class="qbtn" onclick="changeQty(${i},-1)">−</button><span class="qnum">${item.qty}</span><button class="qbtn" onclick="changeQty(${i},1)">+</button></div></div><button class="ci-rm" onclick="removeItem(${i})">✕</button></div>`).join('');}
+  function changeQty(i,d){cart[i].qty+=d;if(cart[i].qty<=0)cart.splice(i,1);updateCart();}
+  function removeItem(i){cart.splice(i,1);updateCart();}
+  function checkout(){
+  if(!cart.length){showToast('Your cart is empty!');return;}
+  
+  // Save order to localStorage
+  const orders = JSON.parse(localStorage.getItem('rapide_orders') || '[]');
+  const total = cart.reduce((a,i)=>a+i.price*i.qty,0);
+  orders.push({
+    id: 'ORD-' + Date.now().toString(36).toUpperCase() + Math.random().toString(36).slice(2,5).toUpperCase(),
+    timestamp: Date.now(),
+    name: 'Customer',
+    email: '',
+    phone: '',
+    address: '',
+    items: cart.map(item => ({name: item.name, price: item.price, qty: item.qty})),
+    total: total,
+    notes: '',
+    status: 'pending'
+  });
+  localStorage.setItem('rapide_orders', JSON.stringify(orders));
+  
+  showToast('<strong>Order placed!</strong> Our team will contact you shortly.');
+  cart=[];
+  updateCart();
+  closeCart();
+}
+  let toastTm;
+  function showToast(text){const t=document.getElementById('toast');document.getElementById('toastText').innerHTML=text;t.classList.add('show');clearTimeout(toastTm);toastTm=setTimeout(()=>t.classList.remove('show'),3200);}
+  const endDate=new Date();endDate.setDate(endDate.getDate()+12);endDate.setHours(endDate.getHours()+8,endDate.getMinutes()+34,endDate.getSeconds()+22);
+  function updateTimer(){let diff=Math.max(0,Math.floor((endDate-new Date())/1000));const d=Math.floor(diff/86400);diff%=86400;const h=Math.floor(diff/3600);diff%=3600;const m=Math.floor(diff/60),s=diff%60;document.getElementById('d').textContent=String(d).padStart(2,'0');document.getElementById('h').textContent=String(h).padStart(2,'0');document.getElementById('m').textContent=String(m).padStart(2,'0');document.getElementById('s').textContent=String(s).padStart(2,'0');}
+  updateTimer();setInterval(updateTimer,1000);
+  const obs=new IntersectionObserver(entries=>entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('visible');}),{threshold:.08});
+  document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+</script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

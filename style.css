@@ -1,0 +1,12 @@
+.prod-img {
+  width: 100%;
+  height: 250px;        /* adjust frame size */
+  overflow: hidden;
+}
+
+.prod-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;    /* 🔥 makes it fill the frame */
+}
+
